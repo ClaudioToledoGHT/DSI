@@ -1,22 +1,43 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="utf-8">
-        <title>Login</title>
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename = 'favicon.png') }}"/>
-        <link rel="stylesheet" href="{{ url_for('static', filename = 'base.css') }}"/>
-    </head>
-    <body>
-        {% if mensagem %}
-            <p class="mensagem">{{mensagem}}</p>
-        {% endif %}
-        {% if erro %}
-            <p class="erro">{{erro}}</p>
-        {% endif %}
-        <form action="./login" method="POST">
-            <p><label for="email">Login:</label> <input type="text" name="email" id="email" /></p>
-            <p><label for="senha">Senha:</label> <input type="password" name="senha" id="senha" /></p>
-            <p><button type="submit">Enviar</button></p>
-        </form>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block titulo %}Cadastrar ?{% endblock %}
+{% block js %}
+
+{% endblock %}
+
+{% block content %}
+
+    {% if erro %}
+    <br/>
+    <br/>
+    <div class="alert card amber lighten-4 brown-text">
+        <div class="card-content">
+            <!-- <i class="material-icons">report_problem</i> -->
+            <p>{{erro}}</p>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    {% endif %}
+    {% if mensagem %}
+        <p class="mensagem">{{mensagem}}</p>
+    {% endif %}
+    <form action="./login" method="POST" class="login-container">
+        
+        <div class="row">
+            <div class="input-field col s12">
+            <input name="email" id="email" type="text" class="validate">
+            <label for="email">E-mail</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+            <input name="senha" id="senha" type="password" class="validate">
+            <label for="senha">Senha</label>
+            </div>
+        </div>
+
+        <button type="submit" class="waves-effect waves-light btn">entrar</button>
+    </form>
+{% endblock %}
+

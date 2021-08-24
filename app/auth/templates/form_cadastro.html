@@ -47,39 +47,32 @@
 
         <!-- {% if usuario['id_usuario'] != 'novo' %}<button type="button" onclick="javascript:excluir();">Excluir</button>{% endif %} -->
 </form>
-    <p><a href="/">Voltar</a></p>
+    <h3 class="center-align">Cadastro</h3>
 
-    <form action="/cadastro" method="POST" id="form_principal" class="col s12">
+    <form action="/cadastro" method="POST" class="form-cadastro" class="col s12" id="form_principal">
 
+        <h5 class="center-align">Dados pessoais</h5>
         {% if usuario != 'novo' %}
-        <div class="row">
             <div class="input-field col s12">
-                <input id="nome" type="text" class="validate" value="{{usuario['id']}}">
-                <label for="nome">Id</label>
+                <input id="id" type="text" class="validate" value="{{usuario['id']}}">
+                <label for="id">Id</label>
             </div>
-        </div>
         {% endif %}
 
-        <div class="row">
-            <div class="input-field col s12">
-            <input id="nome" type="text" class="validate" value="{{usuario['nome']}}">
+        <div class="input-field col s12">
+            <input id="nome" name="nome" type="text" class="validate" value="{{usuario['nome']}}">
             <label for="nome">Nome completo</label>
-            </div>
         </div>
 
-        <div class="row">
-            <div class="input-field col s12">
-                <input id="email" type="email" class="validate" value="{{usuario['email']}}">
-                <label for="email">E-mail</label>
-                <span class="helper-text" data-error="Por favor digite um e-mail válido" data-success="right"></span>
-            </div>
+        <div class="input-field col s12">
+            <input name="email" id="email" type="email" class="validate" value="{{usuario['email']}}">
+            <label for="email">E-mail</label>
+            <span class="helper-text" data-error="Por favor digite um e-mail válido" data-success=""></span>
         </div>
 
-        <div class="row">
-            <div class="input-field col s12">
-            <input id="senha" type="password" class="validate" value="{{usuario['senha']}}">
+        <div class="input-field col s12">
+            <input name="senha" id="senha" type="password" class="validate" value="{{usuario['senha']}}">
             <label for="senha">Senha</label>
-            </div>
         </div>
 
         <div class="input-field col s12">
@@ -99,15 +92,57 @@
             <label for="tipoUsuario">Tipo de usuário</label>
         </div>
 
+        <h5 class="center-align">Endereço</h5>
+        <div class="input-field col s12">
+            <input name="logradouro" id="logradouro" type="text" class="validate" value="{{usuario['logradouro']}}">
+            <label for="logradouro">Logradouro</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="bairro" id="bairro" type="text" class="validate" value="{{usuario['bairro']}}">
+            <label for="bairro">Bairro</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="numero" id="numero" type="text" class="validate" value="{{usuario['numero']}}">
+            <label for="numero">Número</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="complemento" id="complemento" type="text" class="validate" value="{{usuario['complemento']}}">
+            <label for="complemento">Complemento</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="pontoDeReferencia" id="pontoDeReferencia" type="text" class="validate" value="{{usuario['pontoDeReferencia']}}">
+            <label for="pontoDeReferencia">Ponto de referência</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="latitude" id="latitude" type="number" class="validate" value="{{usuario['latitude']}}">
+            <label for="latitude">Latitude</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="longitude" id="longitude" type="number" class="validate" value="{{usuario['longitude']}}">
+            <label for="longitude">Longitude</label>
+        </div>
+
+
         <br/>
 
-        {% if usuario == 'novo' %}
-            <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Cadastrar</button>
-        {% endif %}
+        <div class="button-center">
+            {% if usuario == 'novo' %}
+            <!-- onclick="javascript:salvar();" -->
+                <button type="submit" class="waves-effect waves-light btn">Cadastrar</button>
+            {% endif %}
+    
+            {% if usuario != 'novo' %}
+                <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Salvar</button>
+            {% endif %}
+        </div>
 
-        {% if usuario != 'novo' %}
-            <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Salvar</button>
-        {% endif %}
+        <br/>
 
     </form>
 

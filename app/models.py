@@ -4,7 +4,8 @@ from flask_login import UserMixin
 
 class TiposUsuario(enum.Enum):
     cliente = 1
-    fornecedor = 2
+    fornecedor = 2,
+    admin = 3
 
 class Usuario(db.Model):
     __tablename__ = "usuarios"
@@ -15,6 +16,9 @@ class Usuario(db.Model):
     tipoUsuario = db.Column(db.Integer)
     # uselist = false representa relação one-to-one
     endereco = db.relationship("Endereco", backref="usuario", uselist=False)
+    _id = db.relationship('Produto', backref='usuario', lazy=True)
+
+
 
 class Endereco(db.Model):
     __tablename__ = "enderecos"
@@ -28,11 +32,14 @@ class Endereco(db.Model):
     longitude = db.Column(db.Float())
     latitude = db.Column(db.Float())
 
-class Produto():
+class Produto(db.Model):
     __tablename__ = "produtos"
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(30), nullable=False)
     descricao = db.Column(db.String(50), nullable=False)
-    peso = db.Column(db.BigInteger)
-    valor = db.Column(db.BigInteger)
-    valor = db.Column(db.BigInteger)
+    valorInicial = db.Column(db.Integer)
+    peso = db.Column(db.Integer)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+
+    #sabores
+    #embalagem
