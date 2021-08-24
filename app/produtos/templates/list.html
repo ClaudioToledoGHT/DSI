@@ -3,6 +3,13 @@
 {% block js %}
 
 {% endblock %}
+{% block tipoUsr %}
+{% if tipoUsr == 1 %} <!--1 = cliente // 2= fornecedor -->
+<li><a href="#">COMPRA</a></li>F
+{% else %}
+<li><a class="waves-effect waves-light btn" href="/produtos/cadastrar">Novo produto</a></li>
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <h1>Produtos</h1>

@@ -44,6 +44,7 @@ def cadastrar():
 @auth.route("/")
 @auth.route('/login', methods=["GET", "POST"])
 def autenticar():
+
         print('request.method')
         print(request.method)
         if request.method == 'GET':
@@ -57,6 +58,7 @@ def autenticar():
                 return render_template('login.html', erro='Informe as credenciais')
 
             autenticado = validar_autenticacao(email, senha)
+            print(autenticado)
 
             if not autenticado:
                 return render_template('login.html', erro='Credenciais inválidas')
@@ -106,3 +108,4 @@ def validar_autenticacao(email, senha):
     if not usuario or not check_password_hash(usuario.senha, senha):
         return False
     return usuario
+
