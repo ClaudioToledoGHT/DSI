@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar ?{% endblock %}
+{% block js %}
+    function validar() {
+        // const nome = document.getElementById('nome');
+        // const sexo_masc = document.getElementById('sexo_masc');
+        // const sexo_fem = document.getElementById('sexo_fem');
+        // const serie = document.getElementById('serie');
+        // if (nome.value === '') {
+        //     alert("Preencha o nome.");
+        //     return false;
+        // }
+        // if (!sexo_masc.checked && !sexo_fem.checked) {
+        //     alert("Escolha o sexo.");
+        //     return false;
+        // }
+        // if (serie.value === "escolha") {
+        //     alert("Escolha a série.");
+        //     return false;
+        // }
+        return true;
+    }
+
+    function salvar() {
+        console.log('salvar')
+        if (validar()) document.getElementById("form_principal").submit();
+    }
+
+{% endblock %}
+{% block content %}
+<form action="/cadastro/{{ usuario['id_usuario'] }}" method="POST" id="form_principal" enctype="multipart/form-data">
+
+    <!-- <p>
+        <label>Sexo:</label>
+        <input type="radio" id="sexo_masc" name="sexo" value="M" {% if usuario['sexo'] == 'M' %}checked="checked"{% endif %}>Masculino</input>
+        <input type="radio" id="sexo_fem" name="sexo" value="F" {% if usuario['sexo'] == 'F' %}checked="checked"{% endif %}>Feminino</input>
+    </p> -->
+    <!-- <p>
+        <label for="serie">Série:</label>
+        <select name="id_serie" id="serie">
+            <option value="escolha">Escolha...</option>
+            {% for serie in series %}
+                <option value="{{serie['id_serie']}}" {% if usuario['id_serie'] == serie['id_serie'] %}selected="selected"{% endif %}>{{serie['numero']}} {{serie['turma']}}</option>
+            {% endfor %}
+        </select>
+    </p> -->
+
+        <!-- {% if usuario['id_usuario'] != 'novo' %}<button type="button" onclick="javascript:excluir();">Excluir</button>{% endif %} -->
+</form>
+    <p><a href="/">Voltar</a></p>
+
+    <form action="/cadastro" method="POST" id="form_principal" class="col s12">
+
+        {% if usuario != 'novo' %}
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="nome" type="text" class="validate" value="{{usuario['id']}}">
+                <label for="nome">Id</label>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="input-field col s12">
+            <input id="nome" type="text" class="validate" value="{{usuario['nome']}}">
+            <label for="nome">Nome completo</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="email" type="email" class="validate" value="{{usuario['email']}}">
+                <label for="email">E-mail</label>
+                <span class="helper-text" data-error="Por favor digite um e-mail válido" data-success="right"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+            <input id="senha" type="password" class="validate" value="{{usuario['senha']}}">
+            <label for="senha">Senha</label>
+            </div>
+        </div>
+
+        <div class="input-field col s12">
+            <br/>
+            <p>
+                <label>
+                    <input name="tipoUsuario" type="radio" checked value="1" />
+                    <span>Cliente</span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input name="tipoUsuario" type="radio" value="2" />
+                    <span>Fornecedor</span>
+                </label>
+            </p>
+            <label for="tipoUsuario">Tipo de usuário</label>
+        </div>
+
+        <br/>
+
+        {% if usuario == 'novo' %}
+            <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Cadastrar</button>
+        {% endif %}
+
+        {% if usuario != 'novo' %}
+            <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Salvar</button>
+        {% endif %}
+
+    </form>
+
+{% endblock %}
