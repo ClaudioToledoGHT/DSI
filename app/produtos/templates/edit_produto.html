@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar ?{% endblock %}
+{% block js %}
+
+{% endblock %}
+{% block tipoUsr %}
+{% if tipoUsr == 1 %} <!--1 = cliente // 2= fornecedor -->
+<li><a href="#">COMPRA</a></li>
+{% else %}
+<li><a class="waves-effect waves-light btn" href="/produtos/cadastrar">Novo produto</a></li>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>Produtos</h1>
+<form action="/produtos/editar/{{produtos.id}}" method="POST" class="form-cadastro" class="col s12" id="form_principal" enctype="multipart/form-data">
+
+    {% if produto != 'novo' %}
+        <div class="input-field col s12">
+            <input id="id" type="text" class="validate" value="{{produtos.id}}" readonly>
+            <label for="id">Id</label>
+        </div>
+    {% endif %}
+
+    <div class="input-field col s12">
+        <input id="nome" name="nome" type="text" class="validate" value="{{produtos.nome}}">
+        <label for="nome">Nome</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input id="descricao" name="descricao" type="text" class="validate" value="{{produtos.descricao}}">
+        <label for="descricao">Descrição</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input id="valorInicial" name="valorInicial" type="number" class="validate" value="{{produtos.valorInicial}}">
+        <label for="valorInicial">Valor inicial</label>
+    </div>
+
+    <div class="input-field col s12">
+        <input id="peso" name="peso" type="number" class="validate" value="{{produtos.peso}}">
+        <label for="peso">Peso(gramas)</label>
+    </div>
+
+    <br/>
+
+    <div class="button-center">
+        {% if produto == 'novo' %}
+        <!-- onclick="javascript:salvar();" -->
+            <button type="submit" class="waves-effect waves-light btn">Cadastrar</button>
+        {% endif %}
+
+        {% if produto != 'novo' %}
+            <button type="submit" onclick="javascript:salvar();" class="waves-effect waves-light btn">Salvar</button>
+        {% endif %}
+    </div>
+
+    <br/>
+
+</form>
+{% endblock %}

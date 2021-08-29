@@ -87,7 +87,7 @@ def logout():
     resposta.set_cookie("login", "", samesite = "Strict")
     resposta.set_cookie("senha", "", samesite = "Strict")
     return resposta
-"""
+
 @auth.errorhandler(404)
 def not_found(e):
     print(e)
@@ -98,7 +98,7 @@ def not_found(e):
 def general_exception(e):
     print(e)
     return render_template('error.html')
-"""
+
 # Helpers
 def esta_autenticado():
     email = request.cookies.get("login", "")

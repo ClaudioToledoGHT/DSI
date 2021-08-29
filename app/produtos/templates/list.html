@@ -15,11 +15,32 @@
 <h1>Produtos</h1>
 
     {% for produto in produtos %}
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-        <a>{{ produto.nome }}</a>
-    </li>
-    </ul>
+        {% if produto.desabilitado != 'S' %}
+            <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a>{{ produto.nome }}</a>
+            </li>
+            </ul>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a href='/produtos/editar/{{produto.id}}'>Editar</a>
+                    <a href='/produtos/desabilitar/{{produto.id}}'>Desabilitar</a>
+                </li>
+                </ul>
+        {% else %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a><s>{{ produto.nome }}</s></a>
+                </li>
+                </ul>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href='/produtos/editar/{{produto.id}}'>Editar</a>
+                        <a href='/produtos/desabilitar/{{produto.id}}'>Habilitar</a>
+                    </li>
+                    </ul>
+        {% endif %}
     {% endfor %}
 
+    
 {% endblock %}

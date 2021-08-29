@@ -42,6 +42,7 @@ class Produto(db.Model):
     descricao = db.Column(db.String(50), nullable=False)
     valorInicial = db.Column(db.Integer)
     peso = db.Column(db.Integer)
+    desabilitado = db.Column(db.String(1))
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
 
     #sabores
