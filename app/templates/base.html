@@ -11,10 +11,10 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename = 'base.css') }}"/>
-
-  <script type="text/javascript">
+  <script>
     {% block js %}{% endblock %}
-  </script>
+    </script>
+
 </head>
 
 <body>
@@ -22,12 +22,11 @@
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">Sorvetes S.A.</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/cadastro" class="waves-effect waves-light btn">cadastrar</a></li>
+        {% block tipoUsr %}{% endblock %}
         <li><a href="/produtos">Produtos</a></li>
         <li><a href="/vendedor/id/produtos">Meus produtos</a></li>
         <!-- <i class="material-icons right">add</i> -->
-        <li><a class="waves-effect waves-light btn" href="/produtos/cadastrar">Novo produto</a></li>
-        <li><a href="/logout">Sair</a></li>
+        {% block entrarsair %} </li><li><a href="/logout">Sair</a></li> {% endblock %}
       </ul>
     </div>
   </nav>
