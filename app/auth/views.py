@@ -3,6 +3,7 @@ from app.models import Usuario, Endereco
 from app.daos.UsuarioDAO import usuario_dao
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import auth
+from geopy.geocoders import Nominatim
 
 def caminhoPrincipal():
     return '/produtos'
@@ -29,12 +30,17 @@ def cadastrar():
 
         endereco = Endereco()
         endereco.logradouro = request.form['logradouro']
+        endereco.cidade = request.form['cidade']
+        endereco.cep = request.form['cep']
+        endereco.uf = request.form['uf']
         endereco.bairro = request.form['bairro']
         endereco.numero = request.form['numero']
         endereco.complemento = request.form['complemento']
         endereco.pontoDeReferencia = request.form['pontoDeReferencia']
-        endereco.longitude = request.form['longitude']
-        endereco.latitude = request.form['latitude']
+        geolocator = Nominatim(user_agent="DSI_GHT_2021")
+        location = geolocator.geocode(endereco['logradouro'] + endereco['numero'] + ", " + endereco['cidade'] + " - " + endereco['bairro'])
+        endereco.longitude = location.longitude
+        endereco.latitude = location.latitude
         usuario.endereco = endereco
 
         usuario_dao.register(usuario)

@@ -93,6 +93,22 @@
         </div>
 
         <h5 class="center-align">Endereço</h5>
+
+        <div class="input-field col s12">
+            <input name="cep" id="cep" type="text" class="validate" value="{{usuario['cep']}}">
+            <label for="cep">CEP</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="uf" id="uf" type="text" class="validate" value="{{usuario['uf']}}">
+            <label for="uf">Estado</label>
+        </div>
+
+        <div class="input-field col s12">
+            <input name="cidade" id="cidade" type="text" class="validate" value="{{usuario['cidade']}}">
+            <label for="cidade">Cidade</label>
+        </div>
+
         <div class="input-field col s12">
             <input name="logradouro" id="logradouro" type="text" class="validate" value="{{usuario['logradouro']}}">
             <label for="logradouro">Logradouro</label>
@@ -117,17 +133,6 @@
             <input name="pontoDeReferencia" id="pontoDeReferencia" type="text" class="validate" value="{{usuario['pontoDeReferencia']}}">
             <label for="pontoDeReferencia">Ponto de referência</label>
         </div>
-
-        <div class="input-field col s12">
-            <input name="latitude" id="latitude" type="number" class="validate" value="{{usuario['latitude']}}">
-            <label for="latitude">Latitude</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input name="longitude" id="longitude" type="number" class="validate" value="{{usuario['longitude']}}">
-            <label for="longitude">Longitude</label>
-        </div>
-
 
         <br/>
 

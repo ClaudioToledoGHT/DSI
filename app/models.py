@@ -24,6 +24,9 @@ class Endereco(db.Model):
     __tablename__ = "enderecos"
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cep = db.Column(db.String(20))
+    uf = db.Column(db.String(2))
+    cidade = db.Column(db.String(30))
     logradouro = db.Column(db.String(120))
     bairro = db.Column(db.String(80))
     numero = db.Column(db.String(10))
