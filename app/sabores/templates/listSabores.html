@@ -3,34 +3,38 @@
 {% block js %}
 
 {% endblock %}
-
+{% block entrarsair %}
+<li><a class="waves-effect waves-light btn" href="/sabores/cadastrar">Novo Sabor</a></li>
+<li><a href="javascript:void(0)" onClick="history.go(-1); return false;">Voltar</a></li>
+<li><a href="/logout">Sair</a></li>
+{% endblock %}
 
 {% block content %}
-<h1>Produtos</h1>
+<h1>Sabores</h1>
 
-    {% for produto in produtos %}
-        {% if produto.desabilitado != 'S' %}
+    {% for sabor in sabores %}
+        {% if sabor.desabilitado != 'S' %}
             <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                <a>{{ produto.nome }}</a>
+                <a>{{ sabor.sabor }}</a>
             </li>
             </ul>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <a href='/produtos/editar/{{produto.id}}'>Editar</a>
-                    <a href='/produtos/desabilitar/{{produto.id}}'>Desabilitar</a>
+                    <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
+                    <a href='/sabores/desabilitar/{{sabor.id}}'>Desabilitar</a>
                 </li>
                 </ul>
         {% else %}
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <a><s>{{ produto.nome }}</s></a>
+                    <a><s>{{ sabor.sabor }}</s></a>
                 </li>
                 </ul>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <a href='/produtos/editar/{{produto.id}}'>Editar</a>
-                        <a href='/produtos/desabilitar/{{produto.id}}'>Habilitar</a>
+                        <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
+                        <a href='/sabores/desabilitar/{{sabor.id}}'>Habilitar</a>
                     </li>
                     </ul>
         {% endif %}

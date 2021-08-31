@@ -22,11 +22,20 @@
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">Sorvetes S.A.</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        {% block tipoUsr %}{% endblock %}
+        {% block navbar %}
+
+        {% if tipoUsr == 1 %} <!--1 = cliente // 2= fornecedor -->
+        <li><a href="#">COMPRA</a></li>
+        {% elif tipoUsr == 2 %}
+        <li><a class="waves-effect waves-light btn" href="/produtos/cadastrar">Novo Produto</a></li>
         <li><a href="/produtos">Produtos</a></li>
         <li><a href="/vendedor/id/produtos">Meus produtos</a></li>
+        <li><a href="/sabores">Sabores</a></li>
+        {% else %}
+        {% endif %}
+        {% endblock %}
         <!-- <i class="material-icons right">add</i> -->
-        {% block entrarsair %} </li><li><a href="/logout">Sair</a></li> {% endblock %}
+        {% block entrarsair %} <li><a href="/logout">Sair</a></li> {% endblock %}
       </ul>
     </div>
   </nav>

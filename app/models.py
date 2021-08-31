@@ -45,5 +45,11 @@ class Produto(db.Model):
     desabilitado = db.Column(db.String(1))
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
 
-    #sabores
+
+class Sabores(db.Model):
+    __tablename__ = "SABORES"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sabor = db.Column(db.String(40), nullable=False)
+    desabilitado = db.Column(db.String(1))
+
     #embalagem
