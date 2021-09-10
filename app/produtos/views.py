@@ -9,8 +9,13 @@ from app.auth.views import esta_autenticado
 def listar_produtos():
     esta_autenticado()
     produtos = produto_dao.get_all()
-    print('produtos')
-    print(produtos)
+
+    lista = []
+    for produto in produtos:
+        produto.valorInicial = '{:.2f}'.format(produto.valorInicial)
+        produto.peso = '{:.1f}'.format(produto.peso)
+        lista.append(produto)
+
     return render_template('list.html', produtos=produtos, tipoUsr = esta_autenticado().tipoUsuario)
 
 @produto.route("/produtos/cadastrar", methods=["GET", "POST"])
