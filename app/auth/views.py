@@ -39,8 +39,17 @@ def cadastrar():
         endereco.pontoDeReferencia = request.form['pontoDeReferencia']
         geolocator = Nominatim(user_agent="DSI_GHT_2021")
         location = geolocator.geocode(endereco.logradouro + ", " + endereco.numero + ", " + endereco.cidade + " - " + endereco.bairro)
-        endereco.longitude = location.longitude
-        endereco.latitude = location.latitude
+
+        print('locatioooon')
+        print(location)
+        latitude = 0
+        longitude = 0
+        if location:
+            latitude = location.latitude
+            longitude = location.latitude
+            
+        endereco.longitude = longitude
+        endereco.latitude = latitude
         usuario.endereco = endereco
 
         usuario_dao.register(usuario)
