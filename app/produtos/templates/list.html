@@ -4,37 +4,32 @@
 
 {% endblock %}
 
-
 {% block content %}
-<h1>Produtos</h1>
+<h1>Sorvetes</h1>
 
-    {% for produto in produtos %}
-        {% if produto.desabilitado != 'S' %}
-            <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <a>{{ produto.nome }}</a>
-            </li>
-            </ul>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <a href='/produtos/editar/{{produto.id}}'>Editar</a>
-                    <a href='/produtos/desabilitar/{{produto.id}}'>Desabilitar</a>
-                </li>
-                </ul>
-        {% else %}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <a><s>{{ produto.nome }}</s></a>
-                </li>
-                </ul>
+    <ul class=" d-flex sorvete-medium-container">
+        {% for produto in produtos %}
+            <li class="list-group-item sorvete-item">
+
+                {% if tipoUsr != 1 %}
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a href='/produtos/editar/{{produto.id}}'>Editar</a>
+                    <li class="list-group-item text-align-lst">
+                        {% if produto.desabilitado != 'S' %}
+                        <a href='/produtos/desabilitar/{{produto.id}}'>Desabilitar</a>
+                        {% else %}
                         <a href='/produtos/desabilitar/{{produto.id}}'>Habilitar</a>
+                        {% endif %}
+                        <a href='/produtos/editar/{{produto.id}}'>Editar</a>
                     </li>
-                    </ul>
-        {% endif %}
-    {% endfor %}
+                </ul>
+                {% endif %}
+                {% include 'sorvete.html' %}
+                <p class="sorvete-name">{{ produto.nome }}</p>
+                <p class="sorvete-description">{{ produto.descricao }}</p>
+                <p class="sorvete-price">R${{ produto.valorInicial }}<span class="sorvete-peso">({{ produto.peso }} gramas)</span></p>
+            </li>
+        {% endfor %}
+    </ul>
 
     
 {% endblock %}

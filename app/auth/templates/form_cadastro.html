@@ -52,12 +52,15 @@
     <form action="/cadastro" method="POST" class="form-cadastro" class="col s12" id="form_principal">
 
         <h5 class="center-align">Dados pessoais</h5>
-        {% if usuario != 'novo' %}
+        {% if usuario.cadastro != True %}
             <div class="input-field col s12">
                 <input id="id" type="text" class="validate" value="{{usuario['id']}}">
                 <label for="id">Id</label>
             </div>
         {% endif %}
+
+        <input name="provedor_id" id="provedor_id" type="hidden" value="{{usuario['provedor_id']}}">
+        <input name="provedor" id="provedor" type="hidden" value="{{usuario['provedor']}}">
 
         <div class="input-field col s12">
             <input id="nome" name="nome" type="text" class="validate" value="{{usuario['nome']}}">
@@ -70,10 +73,12 @@
             <span class="helper-text" data-error="Por favor digite um e-mail válido" data-success=""></span>
         </div>
 
-        <div class="input-field col s12">
-            <input name="senha" id="senha" type="password" class="validate" value="{{usuario['senha']}}">
-            <label for="senha">Senha</label>
-        </div>
+        {% if usuario.provedor != 'GOOGLE' %}
+            <div class="input-field col s12">
+                <input name="senha" id="senha" type="password" class="validate" value="{{usuario['senha']}}">
+                <label for="senha">Senha</label>
+            </div>
+        {% endif %}
 
         <div class="input-field col s12">
             <br/>
@@ -134,15 +139,25 @@
             <label for="pontoDeReferencia">Ponto de referência</label>
         </div>
 
+        <div class="input-field col s12" style="display:none;">
+            <input name="latitude" id="latitude" type="text" class="validate" value="{{usuario['latitude']}}">
+            <label for="latitude">Latitude</label>
+        </div>
+
+        <div class="input-field col s12" style="display:none;">
+            <input name="longitude" id="longitude" type="text" class="validate" value="{{usuario['longitude']}}">
+            <label for="longitude">Longitude</label>
+        </div>
+
         <br/>
 
         <div class="button-center">
-            {% if usuario == 'novo' %}
+            {% if usuario.cadastro == True %}
             <!-- onclick="javascript:salvar();" -->
                 <button type="submit" class="waves-effect waves-light btn">Cadastrar</button>
             {% endif %}
     
-            {% if usuario != 'novo' %}
+            {% if usuario.cadastro != True %}
                 <button type="button" onclick="javascript:salvar();" class="waves-effect waves-light btn">Salvar</button>
             {% endif %}
         </div>

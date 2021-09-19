@@ -12,21 +12,24 @@
 
 {% block content %}
 
-    {% if erro %}
+    {% if erro or mensagem %}
     <br/>
     <br/>
     <div class="alert card amber lighten-4 brown-text">
         <div class="card-content">
             <!-- <i class="material-icons">report_problem</i> -->
             <p>{{erro}}</p>
+            <p>{{mensagem}}</p>
         </div>
     </div>
     <br/>
     <br/>
     {% endif %}
-    {% if mensagem %}
-        <p class="mensagem">{{mensagem}}</p>
-    {% endif %}
+
+    <form action="./google/login" method="POST" class="">
+        <button type="submit" class="waves-effect waves-light btn">entrar com google</button>
+    </form>
+
     <form action="./login" method="POST" class="login-container">
         
         <div class="row">

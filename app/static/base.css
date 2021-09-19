@@ -1,5 +1,12 @@
 * {
-    
+    --color1: #eb2262;
+    --color2: #7EED83;
+    --color3: #22d7ce;
+    --casquinha-color: #edd5af;
+}
+
+p {
+  margin: 0;
 }
 
 .alert .card-content p {
@@ -24,4 +31,272 @@
 .button-center {
     text-align: center;
     width: 100%;
+}
+
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.text-align-lst {
+  text-align-last: justify;
+}
+
+/* sorvete */
+.sorvetes {
+  width: 90px;
+  height: 80px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* SORVETE CASQUINHA */
+.wrapper-box {
+  position: relative;
+  margin: auto;
+  display: block;
+  width: 250px;
+  height: 250px;
+}
+
+/* Casquinha */
+.casquinha {
+    border-left: 42px solid transparent;
+    border-top: 125px solid #edd5af;
+    border-right: 42px solid transparent;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 35%;
+    bottom: 5%;
+}
+
+.sorvete-pink {
+  background-color: var(--color1);
+    left: 33.5%;
+    bottom: 65%;
+    z-index: 3;
+}
+
+.sorvete-amarelo {
+    background-color: var(--color2);
+    left: 32%;
+    bottom: 50%;
+    z-index: 2;
+}
+
+.sorvete-vermelho {
+    background-color: var(--color3);
+    left: 34%;
+    bottom: 35%;
+    z-index: 1;
+}
+
+/* sorvete bola 1 */
+.sorvete-pink-b.borda1 {
+    width: 30px;
+    height: 45px;
+    background-color: var(--color1);
+    border-radius: 50%;
+    position: absolute;
+    left: 53%;
+    bottom: 67%;
+    z-index: 3;
+}
+
+  .sorvete-pink-b.borda2 {
+    background-color: var(--color1);
+    width: 20px;
+    height: 60px;;
+    position: absolute;
+    left: 55%;
+    bottom: 63%;
+    z-index: 3;
+    border-radius: 50%;
+    animation: escorrer 5s infinite ease-in;
+  }
+
+.sorvete-pink-b.borda3 {
+    background-color: var(--color1);
+    width: 35px;
+    height: 22px;
+    border-radius: 50%;
+    position: absolute;
+    left: 33%;
+    bottom: 66%;
+    z-index: 3;
+  }
+
+  .sorvete-pink-b.borda4 {
+    background-color: var(--color1);
+    width: 20px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    left: 53.5%;
+    bottom: 64.5%;
+    z-index: 3;
+    animation: escorrer-sm 5s infinite ease-in;
+  }
+
+/* sorvete bola 2 */
+  .sorvete-amarelo-b.borda1 {
+    width: 30px;
+    height: 45px;
+    background-color: var(--color2);
+    border-radius: 50%;
+    position: absolute;
+    left: 53%;
+    bottom: 52%;
+    z-index: 2;
+  }
+  .sorvete-amarelo-b.borda2 {
+    width: 35px;
+    height: 40px;
+    background-color: var(--color2);
+    border-radius: 50%;
+    position: absolute;
+    left: 53%;
+    bottom: 50.5%;
+    z-index: 2;
+  }
+  .sorvete-amarelo-b.borda3 {
+    width: 30px;
+    height: 45px;
+    background: var(--color2);
+    border-radius: 50%;
+    position: absolute;
+    left: 34%;
+    bottom: 50%;
+    z-index: 2;
+  }
+  .sorvete-amarelo-b.borda4 {
+    width: 35px;
+    height: 60px;
+    background-color: var(--color2);
+    border-radius: 50%;
+    position: absolute;
+    left: 40.5%;
+    bottom: 48.5%;
+    z-index: 2;
+    animation: escorrer 5s infinite ease-in;
+  }
+
+/* sorvete bola 3 */
+  .sorvete-vermelho-b.borda1 {
+    width: 30px;
+    height: 35px;
+    background-color: var(--color3);
+    border-radius: 50%;
+    position: absolute;
+    left: 36%;
+    bottom: 35%;
+  }
+  .sorvete-vermelho-b.borda2 {
+    background-color: var(--color3);
+    width: 30px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    left: 40%;
+    bottom: 34%;
+  }
+  .sorvete-vermelho-b.borda3 {
+    background-color: var(--color3);
+    width: 41px;
+    height: 75px;
+    border-radius: 50%;
+    position: absolute;
+    left: 41%;
+    bottom: 32%;
+    animation: escorrer-md 5s infinite ease-in;
+  }
+  .sorvete-vermelho-b.borda4 {
+    background-color: var(--color3);
+    width: 30px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    left: 57%;
+    bottom: 37.5%;
+  }
+  .sorvete-vermelho-b.borda5 {
+    background-color: var(--color3);
+    width: 30px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    left: 53%;
+    bottom: 34%;
+    animation: escorrer-sm 5s infinite ease-in;
+  }
+
+/* animation */
+@keyframes escorrer {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(15px) }
+  100% { transform: translateY(0) }
+}
+
+@keyframes escorrer-md {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(10px) }
+  100% { transform: translateY(0) }
+}
+
+@keyframes escorrer-sm {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(8px) }
+  100% { transform: translateY(0) }
+}
+
+.sorvete-name {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2em;
+  padding-bottom: 5px;
+}
+
+.sorvete-price {
+  padding: 5px 0;
+  font-size: 1.2em;
+}
+
+.sorvete-peso {
+  font-size: 0.9em;
+  margin-left: 10px;
+  color: #999999;
+}
+
+.sorvete-description {
+  color: #1ba1c0;
+  font-weight: 400;
+  font-size: 1em;
+}
+
+.sorvete-medium-container {
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.sorvete-medium-container .sorvete-item {
+  justify-content: center;
+  max-width: 300px;
+  margin-right: 1em;
+  padding: 0 5px;
+  margin-bottom: 1em;
+}
+
+.sorvete-medium-container .sorvete-item:hover {
+  background-color: #f8f9fa;
+}
+
+.google-btn-logo {
+  background-color: white;
+}
+
+.google-btn {
+  background-color: #4285f4;
 }

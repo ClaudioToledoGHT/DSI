@@ -22,7 +22,7 @@ from app.sabores import sabores as sabores_blueprint
 
 def init_app(app):
     app.register_blueprint(produtos_blueprint)
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(auth_blueprint, url_prefix='')
     app.register_blueprint(sabores_blueprint)
 
 
