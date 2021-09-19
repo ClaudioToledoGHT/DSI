@@ -291,6 +291,7 @@ p {
 
 .sorvete-medium-container .sorvete-item:hover {
   background-color: #f8f9fa;
+<<<<<<< HEAD
 }
 
 .google-btn-logo {
@@ -299,4 +300,6 @@ p {
 
 .google-btn {
   background-color: #4285f4;
+=======
+>>>>>>> 9d34bfa84487ec0560ece7109972ef982f8b5c8d
 }
