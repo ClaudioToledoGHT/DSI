@@ -22,23 +22,30 @@
             <p>{{mensagem}}</p>
         </div>
     </div>
-    <br/>
-    <br/>
     {% endif %}
 
+    <br/>
+    <h3 style="text-align: center;">Login</h3>
+    <br/>
+    <br/>
+
+
     <form action="./google/login" method="POST" class="">
-        <button type="submit" class="google-btn" style="background-color: #4285f4;color: white;display: flex;border: none;margin: 0;padding: 0;height: 45px;">
-            <div class="google-btn-logo" style="background-color: white;height: 45px;">
+        <button type="submit" class="google-btn" style="background-color: #4285f4;color: white;display: flex;border: none;margin: 0 auto;padding: 0;height: 45px;align-items: center;">
+            <div class="google-btn-logo" style="background-color: white;height: 45px;text-align: -webkit-center;margin: 0 auto;">
                 <img src="https://avatars.githubusercontent.com/in/40688?v=4" width="35" height="35" style="margin-top: 5px;margin-right: 10px;">
             </div>
-            <div class="waves-effect">
+            <div class="waves-effect" style="width: 35vw;">
                 <p style="padding-left: 15px;padding-right: 15px; font-weight: bold;">entrar com google</p>
             </div>
-
         </button>
     </form>
 
-    <form action="./login" method="POST" class="login-container">
+    <br/>
+    <br/>
+    <br/>
+
+    <form action="./login" method="POST" class="login-container" style="width: 40vw;text-align: -webkit-center;margin: 0 auto;">
         
         <div class="row">
             <div class="input-field col s12">
@@ -54,6 +61,6 @@
             </div>
         </div>
 
-        <button type="submit" class="waves-effect waves-light btn">entrar</button>
+        <button type="submit" class="waves-effect waves-light btn" style="width: 20vw; background-color: #ee6e73;">entrar</button>
     </form>
 {% endblock %}

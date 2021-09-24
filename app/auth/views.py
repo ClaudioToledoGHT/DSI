@@ -30,16 +30,10 @@ def caminhoPrincipal():
 # Valida se o usuário está autenticado antes de toda requisição
 @auth.before_app_request
 def before_anything():
-    print('url requisitada')
-    print(request.url_rule)
-    email = request.cookies.get("login", "")
-    senha = request.cookies.get("senha", "")
-    print(email)
-    print(senha)
-    print('fim before')
-    if str(request.url_rule) != "/static/<path:filename>" and str(request.url_rule) != '/login' and str(request.url_rule) != '/logout' and str(request.url_rule) != '/callback' and str(request.url_rule) != '/cadastro' and str(request.url_rule) != '/google/login' and str(request.url_rule) != '/':
+    print('path')
+    print(str(request.url_rule))
+    if str(request.url_rule) != '/login' and str(request.url_rule) != '/logout' and str(request.url_rule) != '/callback' and str(request.url_rule) != '/cadastro' and str(request.url_rule) != '/google/login' and str(request.url_rule) != '/':
         if not esta_autenticado():
-            if request.cookies.get("login", "") == "":
                 return redirect("/login")
 
 
@@ -47,10 +41,29 @@ def before_anything():
 def cadastrar():
     if request.method == 'GET':
         usuario_obj = {}
-        usuario_obj['nome'] = request.cookies.get("nome", "")
-        usuario_obj['email'] = request.cookies.get("email", "")
-        usuario_obj['provedor_id'] = request.cookies.get("provedor_id", "")
-        usuario_obj['provedor'] = request.cookies.get("provedor", "")
+        nome = request.cookies.get("nome", "")
+        email = request.cookies.get("email", "")
+        provedor_id = request.cookies.get("provedor_id", "")
+        provedor = request.cookies.get("provedor", "")
+        
+        time.sleep(5)
+
+        if not nome and not email and session:
+            print('tem sessao')
+            if 'email' in session:
+                email = session["email"]
+            if 'nome' in session:
+                nome = session["nome"]
+            if 'provedor' in session:
+                provedor = session["provedor"]
+            if 'provedor_id' in session:
+                provedor_id = session["provedor_id"]
+            usuario_obj['senha'] = ''
+
+        usuario_obj['email'] = email
+        usuario_obj['nome'] = nome
+        usuario_obj['provedor_id'] = provedor_id
+        usuario_obj['provedor'] = provedor
         usuario_obj['cadastro'] = True
 
         return render_template('form_cadastro.html', usuario=usuario_obj)
@@ -111,16 +124,12 @@ def autenticar():
             senha = request.form['senha']
 
             if email == "" or senha == "":
-                print('empty data')
                 return render_template('login.html', erro='Informe as credenciais')
 
             autenticado = validar_autenticacao(email, senha, None)
-            print('autenticado')
-            print(autenticado)
             if not autenticado:
                 return render_template('login.html', erro='Credenciais inválidas')
             else:
-                print('autenticado com sucesso')
                 resposta = redirect(caminhoPrincipal())
                 # Armazena o login realizado com sucesso em cookies (autenticação).
                 resposta.set_cookie("login", email, samesite = "Strict")
@@ -128,7 +137,6 @@ def autenticar():
                 # resposta.set_cookie("tipo_usuario", autenticado.tipoUsuario, samesite = "Strict")
                 return resposta
         else:
-            print('else login')
             if not esta_autenticado():
                 return render_template('login.html')
             else:
@@ -141,33 +149,37 @@ def logout():
     resposta = make_response(render_template("login.html", mensagem = "Até breve!"))
 
     # Limpa os cookies com os dados de login (autenticação).
-    # resposta.set_cookie("login", "", samesite = "Strict")
-    # resposta.set_cookie("senha", "", samesite = "Strict")
-    # resposta.set_cookie("nome", "", samesite = "Strict")
-    # resposta.set_cookie("email", "", samesite = "Strict")
-    # resposta.set_cookie("provedor", "", samesite = "Strict")
-    # resposta.set_cookie("provedor_id", "", samesite = "Strict")
+    resposta.set_cookie("login", "", samesite = "Strict")
+    resposta.set_cookie("state", "", samesite = "Strict")
+    resposta.set_cookie("senha", "", samesite = "Strict")
+    resposta.set_cookie("nome", "", samesite = "Strict")
+    resposta.set_cookie("email", "", samesite = "Strict")
+    resposta.set_cookie("provedor", "", samesite = "Strict")
+    resposta.set_cookie("provedor_id", "", samesite = "Strict")
+    session["email"] = None
+    session["nome"] = None
+    session["state"] = None
+    session["provedor"] = None
+    session["provedor_id"] = None
     return resposta
 
 
 @auth.errorhandler(404)
 def not_found(e):
-    print('erro 1')
+    print('404')
     print(e)
     return render_template('404.html')
 
 
 @auth.errorhandler(Exception)
 def general_exception(e):
+    print('500')
     print(e)
-    print('erro 2')
     return render_template('error.html')
 
 @auth.route('/google/login', methods=["GET", "POST"])
 def autenticar_google():
     authorization_url, state = flow.authorization_url()
-    print('url')
-    print(authorization_url)
     session["state"] = state
     resposta = redirect(authorization_url)
     resposta.set_cookie("state", state, samesite = "Strict")
@@ -177,16 +189,11 @@ def autenticar_google():
 def google_auth_callback():
     try:
         flow.fetch_token(authorization_response=request.url)
-        # print('state 1')
-        # print(session["state"])
-        # print('state 2')
-        # print(request.args["state"])
-        # if not session["state"] == request.args["state"]:
-        #     abort(500)  # State does not match!
+
+        if not session["state"] == request.args["state"]:
+            abort(500)  # State does not match!
 
         credentials = flow.credentials
-        print('flow')
-        print(credentials._id_token)
         request_session = requests.session()
         cached_session = cachecontrol.CacheControl(request_session)
         token_request = google.auth.transport.requests.Request(session=cached_session)
@@ -202,10 +209,7 @@ def google_auth_callback():
         nome = id_info.get("name")
 
         # verificando se o e-mail já está cadastrado
-        print('aaaaaaaaaaa')
         usuario = validar_autenticacao(email, '', GOOGLE_PROVIDER)
-        print('verify user')
-        print(usuario)
 
         if not usuario:
             resposta = redirect('/cadastro')
@@ -213,11 +217,6 @@ def google_auth_callback():
             resposta.set_cookie("email", email, samesite = "Strict")
 
         else:
-            print('carregar produtos')
-            print('email')
-            print(email)
-            print('nome')
-            print(nome)
             resposta = redirect("/produtos")
             resposta.set_cookie("login", email, samesite = "Strict")
             # resposta.set_cookie("senha", google_id, samesite = "Strict")
@@ -229,14 +228,8 @@ def google_auth_callback():
 
         resposta.set_cookie("provedor_id", google_id, samesite = "Strict")
         resposta.set_cookie("provedor", GOOGLE_PROVIDER, samesite = "Strict")
-        print('retornar resposta')
-        print('google_id')
-        print(google_id)
-        print('GOOGLE_PROVIDER')
-        print(GOOGLE_PROVIDER)
         return resposta
     except Exception as e:
-        print('errroooooooooooooooo')
         print(e)
         return redirect("/login")
 
@@ -252,27 +245,21 @@ def esta_autenticado():
         print('not email')
 
         if session:
-            print('tem sessao')
-            email = session["email"]
-            tipo_auth = session["provedor"]
+            if 'email' in session:
+                email = session["email"]
+            if 'provedor' in session:
+                tipo_auth = session["provedor"]
+        else:
+            return False
     # if not senha:
     #     senha = request.cookies.get("provedor_id", "")
-    print('esta auth')
-    print(email)
-
-    if not email:
-        return False
 
     return validar_autenticacao(email, senha, tipo_auth)
 
 
 def validar_autenticacao(email, senha, tipo_de_autenticacao):
     usuario = usuario_dao.get_by_email(email)
-    print('email buscado')
-    print(email)
-    print(usuario)
     if not usuario:
-        print('not user')
         return False
     
     if tipo_de_autenticacao == GOOGLE_PROVIDER:
@@ -280,8 +267,7 @@ def validar_autenticacao(email, senha, tipo_de_autenticacao):
         # if usuario.provedor_id != senha:
         #     return False
     elif not check_password_hash(usuario.senha, senha):
-        print('auth original: ' + usuario.senha)
         return False
-    print('fim')
+    print('está autenticado')
     print(usuario.email)
     return usuario

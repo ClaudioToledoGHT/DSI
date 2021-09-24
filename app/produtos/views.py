@@ -7,7 +7,7 @@ from app.auth.views import esta_autenticado
 
 @produto.route('/produtos')
 def listar_produtos():
-    esta_autenticado()
+    usuario = esta_autenticado()
     produtos = produto_dao.get_all()
 
     lista = []
@@ -16,7 +16,7 @@ def listar_produtos():
         produto.peso = '{:.1f}'.format(produto.peso)
         lista.append(produto)
 
-    return render_template('list.html', produtos=produtos, tipoUsr = esta_autenticado().tipoUsuario)
+    return render_template('list.html', produtos=produtos, tipoUsr = usuario.tipoUsuario)
 
 @produto.route("/produtos/cadastrar", methods=["GET", "POST"])
 def adicionar_produto():

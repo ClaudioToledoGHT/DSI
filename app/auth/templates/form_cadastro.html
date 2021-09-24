@@ -80,8 +80,16 @@
             </div>
         {% endif %}
 
+        {% if usuario.provedor == 'GOOGLE' %}
+            <div class="input-field col s12">
+                <input name="senha" id="senha" type="hidden" class="validate" value="***">
+                <label for="senha">Senha</label>
+            </div>
+        {% endif %}
+
         <div class="input-field col s12">
             <br/>
+            <p>Tipo de usuário</p>
             <p>
                 <label>
                     <input name="tipoUsuario" type="radio" checked value="1" />
@@ -94,7 +102,6 @@
                     <span>Fornecedor</span>
                 </label>
             </p>
-            <label for="tipoUsuario">Tipo de usuário</label>
         </div>
 
         <h5 class="center-align">Endereço</h5>
