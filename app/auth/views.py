@@ -1,4 +1,4 @@
-from flask import flash, redirect, session, render_template, url_for, request, make_response
+from flask import flash, redirect, session, abort, render_template, url_for, request, make_response
 from app.models import Usuario, Endereco
 from app.daos.UsuarioDAO import usuario_dao
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -11,6 +11,7 @@ import google.auth.transport.requests
 import os
 import requests
 import pathlib
+import time
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 GOOGLE_CLIENT_ID = "933766707378-urgg0ad2k7s0e6p0s0kji327j8vae7sn.apps.googleusercontent.com"
@@ -29,9 +30,17 @@ def caminhoPrincipal():
 # Valida se o usuário está autenticado antes de toda requisição
 @auth.before_app_request
 def before_anything():
-    if str(request.url_rule) != '/login' and str(request.url_rule) != '/logout' and str(request.url_rule) != '/callback' and str(request.url_rule) != '/cadastro' and str(request.url_rule) != '/google/login' and str(request.url_rule) != '/':
+    print('url requisitada')
+    print(request.url_rule)
+    email = request.cookies.get("login", "")
+    senha = request.cookies.get("senha", "")
+    print(email)
+    print(senha)
+    print('fim before')
+    if str(request.url_rule) != "/static/<path:filename>" and str(request.url_rule) != '/login' and str(request.url_rule) != '/logout' and str(request.url_rule) != '/callback' and str(request.url_rule) != '/cadastro' and str(request.url_rule) != '/google/login' and str(request.url_rule) != '/':
         if not esta_autenticado():
-            return redirect("/login")
+            if request.cookies.get("login", "") == "":
+                return redirect("/login")
 
 
 @auth.route('/cadastro', methods=["GET", "POST"])
@@ -94,14 +103,6 @@ def cadastrar():
         usuario_dao.register(usuario)
         return redirect("/login")
 
-
-@auth.route('/google/login', methods=["GET", "POST"])
-def autenticar_google():
-    authorization_url, state = flow.authorization_url()
-    session["state"] = state
-    return redirect(authorization_url)
-
-
 @auth.route("/")
 @auth.route('/login', methods=["GET", "POST"])
 def autenticar():
@@ -114,7 +115,8 @@ def autenticar():
                 return render_template('login.html', erro='Informe as credenciais')
 
             autenticado = validar_autenticacao(email, senha, None)
-
+            print('autenticado')
+            print(autenticado)
             if not autenticado:
                 return render_template('login.html', erro='Credenciais inválidas')
             else:
@@ -126,6 +128,7 @@ def autenticar():
                 # resposta.set_cookie("tipo_usuario", autenticado.tipoUsuario, samesite = "Strict")
                 return resposta
         else:
+            print('else login')
             if not esta_autenticado():
                 return render_template('login.html')
             else:
@@ -138,17 +141,18 @@ def logout():
     resposta = make_response(render_template("login.html", mensagem = "Até breve!"))
 
     # Limpa os cookies com os dados de login (autenticação).
-    resposta.set_cookie("login", "", samesite = "Strict")
-    resposta.set_cookie("senha", "", samesite = "Strict")
-    resposta.set_cookie("nome", "", samesite = "Strict")
-    resposta.set_cookie("email", "", samesite = "Strict")
-    resposta.set_cookie("provedor", "", samesite = "Strict")
-    resposta.set_cookie("provedor_id", "", samesite = "Strict")
+    # resposta.set_cookie("login", "", samesite = "Strict")
+    # resposta.set_cookie("senha", "", samesite = "Strict")
+    # resposta.set_cookie("nome", "", samesite = "Strict")
+    # resposta.set_cookie("email", "", samesite = "Strict")
+    # resposta.set_cookie("provedor", "", samesite = "Strict")
+    # resposta.set_cookie("provedor_id", "", samesite = "Strict")
     return resposta
 
 
 @auth.errorhandler(404)
 def not_found(e):
+    print('erro 1')
     print(e)
     return render_template('404.html')
 
@@ -156,67 +160,116 @@ def not_found(e):
 @auth.errorhandler(Exception)
 def general_exception(e):
     print(e)
+    print('erro 2')
     return render_template('error.html')
 
+@auth.route('/google/login', methods=["GET", "POST"])
+def autenticar_google():
+    authorization_url, state = flow.authorization_url()
+    print('url')
+    print(authorization_url)
+    session["state"] = state
+    resposta = redirect(authorization_url)
+    resposta.set_cookie("state", state, samesite = "Strict")
+    return resposta
 
 @auth.route("/callback")
 def google_auth_callback():
-    flow.fetch_token(authorization_response=request.url)
+    try:
+        flow.fetch_token(authorization_response=request.url)
+        # print('state 1')
+        # print(session["state"])
+        # print('state 2')
+        # print(request.args["state"])
+        # if not session["state"] == request.args["state"]:
+        #     abort(500)  # State does not match!
 
-    if not session["state"] == request.args["state"]:
-        abort(500)  # State does not match!
+        credentials = flow.credentials
+        print('flow')
+        print(credentials._id_token)
+        request_session = requests.session()
+        cached_session = cachecontrol.CacheControl(request_session)
+        token_request = google.auth.transport.requests.Request(session=cached_session)
 
-    credentials = flow.credentials
-    request_session = requests.session()
-    cached_session = cachecontrol.CacheControl(request_session)
-    token_request = google.auth.transport.requests.Request(session=cached_session)
+        id_info = id_token.verify_oauth2_token(
+            id_token=credentials._id_token,
+            request=token_request,
+            audience=GOOGLE_CLIENT_ID
+        )
 
-    id_info = id_token.verify_oauth2_token(
-        id_token=credentials._id_token,
-        request=token_request,
-        audience=GOOGLE_CLIENT_ID
-    )
+        google_id = id_info.get("sub")
+        email = id_info.get("email")
+        nome = id_info.get("name")
 
-    session["google_id"] = id_info.get("sub")
+        # verificando se o e-mail já está cadastrado
+        print('aaaaaaaaaaa')
+        usuario = validar_autenticacao(email, '', GOOGLE_PROVIDER)
+        print('verify user')
+        print(usuario)
 
-    google_id = id_info.get("sub")
-    email = id_info.get("email")
-    nome = id_info.get("name")
+        if not usuario:
+            resposta = redirect('/cadastro')
+            resposta.set_cookie("nome", nome, samesite = "Strict")
+            resposta.set_cookie("email", email, samesite = "Strict")
 
-    # verificando se o e-mail já está cadastrado
-    usuario = validar_autenticacao(email, '', GOOGLE_PROVIDER)
-    print('verify user')
-    print(usuario)
+        else:
+            print('carregar produtos')
+            print('email')
+            print(email)
+            print('nome')
+            print(nome)
+            resposta = redirect("/produtos")
+            resposta.set_cookie("login", email, samesite = "Strict")
+            # resposta.set_cookie("senha", google_id, samesite = "Strict")
+            resposta.set_cookie("nome", nome, samesite = "Strict")
+            session["email"] = email
+            session["provedor_id"] = google_id
+            session["provedor"] = GOOGLE_PROVIDER
+            session["nome"] = nome
 
-    if not usuario:
-        resposta = redirect('/cadastro')
-        resposta.set_cookie("nome", nome, samesite = "Strict")
-        resposta.set_cookie("email", email, samesite = "Strict")
+        resposta.set_cookie("provedor_id", google_id, samesite = "Strict")
+        resposta.set_cookie("provedor", GOOGLE_PROVIDER, samesite = "Strict")
+        print('retornar resposta')
+        print('google_id')
+        print(google_id)
+        print('GOOGLE_PROVIDER')
+        print(GOOGLE_PROVIDER)
+        return resposta
+    except Exception as e:
+        print('errroooooooooooooooo')
+        print(e)
+        return redirect("/login")
 
-    else:
-        print('carregar produtos')
-        resposta = redirect(caminhoPrincipal())
-        resposta.set_cookie("login", email, samesite = "Strict")
-        # resposta.set_cookie("senha", google_id, samesite = "Strict")
-        resposta.set_cookie("nome", nome, samesite = "Strict")
-
-    resposta.set_cookie("provedor_id", google_id, samesite = "Strict")
-    resposta.set_cookie("provedor", GOOGLE_PROVIDER, samesite = "Strict")
-    return resposta
 
 # Helpers
 def esta_autenticado():
+    # session["email"] = "teste"
     email = request.cookies.get("login", "")
     senha = request.cookies.get("senha", "")
+
+    tipo_auth = request.cookies.get("provedor", "")
+    if not email:
+        print('not email')
+
+        if session:
+            print('tem sessao')
+            email = session["email"]
+            tipo_auth = session["provedor"]
     # if not senha:
     #     senha = request.cookies.get("provedor_id", "")
-    tipo_auth = request.cookies.get("provedor", "")
+    print('esta auth')
+    print(email)
+
+    if not email:
+        return False
 
     return validar_autenticacao(email, senha, tipo_auth)
 
 
 def validar_autenticacao(email, senha, tipo_de_autenticacao):
     usuario = usuario_dao.get_by_email(email)
+    print('email buscado')
+    print(email)
     print(usuario)
     if not usuario:
         print('not user')
@@ -230,4 +283,5 @@ def validar_autenticacao(email, senha, tipo_de_autenticacao):
         print('auth original: ' + usuario.senha)
         return False
     print('fim')
+    print(usuario.email)
     return usuario
