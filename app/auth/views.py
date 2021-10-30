@@ -45,11 +45,8 @@ def cadastrar():
         email = request.cookies.get("email", "")
         provedor_id = request.cookies.get("provedor_id", "")
         provedor = request.cookies.get("provedor", "")
-        
-        time.sleep(5)
 
         if not nome and not email and session:
-            print('tem sessao')
             if 'email' in session:
                 email = session["email"]
             if 'nome' in session:
@@ -231,7 +228,7 @@ def google_auth_callback():
         return resposta
     except Exception as e:
         print(e)
-        return redirect("/login")
+        return redirect("/teste")
 
 
 # Helpers

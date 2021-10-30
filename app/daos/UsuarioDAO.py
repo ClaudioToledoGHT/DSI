@@ -11,6 +11,17 @@ class UsuarioDAO(DAO):
             with self.session(bind=connection) as session:
                 return session.query(self.model).filter_by(email=email).first()
 
+    def get_clientes(self, id):
+            with self.engine.connect() as connection:
+                with self.session(bind=connection) as session:
+                    # return session.query(self.model).filter_by(tipoUsuario=1)
+                    return session.query(self.model).all()
+
+    def get_usuario_by_id(self, id):
+        with self.engine.connect() as connection:
+            with self.session(bind=connection) as session:
+                return session.query(self.model).filter_by(id=id).first()
+
     def register(self, model):
         with self.engine.connect() as connection:
             with self.session(bind=connection) as session:

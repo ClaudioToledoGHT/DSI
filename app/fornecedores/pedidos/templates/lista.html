@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar ?{% endblock %}
+{% block js %}
+
+{% endblock %}
+
+{% block content %}
+<h2>Pedidos</h2>
+
+{% with mensagem = get_flashed_messages() %}
+  {% if mensagem %}
+    <div class="alert card amber lighten-4 brown-text">
+        <div class="card-content">
+            <p>{{mensagem}}</p>
+        </div>
+    </div>
+  {% endif %}
+{% endwith %}
+
+<ul class=" d-flex">
+  {% for pedido in pedidos %}
+    <div class="col s12 m7" style="margin-right: 20px">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p><b>Cliente: </b>{{ pedido.nome }}</p>
+            <p><b>Valor: </b>{{ pedido.valor }}</p>
+            <p><b>Produto: </b>{{ pedido.produto }}</p>
+          </div>
+          <form action="/entregar/pedido/{{pedido.cliente_id}}" method="POST" class="card-action">
+            <button class="btn waves-effect waves-light" type="submit" name="action">Iniciar entrega
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</ul>
+
+    
+{% endblock %}

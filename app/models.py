@@ -15,6 +15,7 @@ class Usuario(db.Model):
     provedor = db.Column(db.String(10))
     email = db.Column(db.String(50))
     senha = db.Column(db.String(255))
+    telefone = db.Column(db.String(20))
     tipoUsuario = db.Column(db.Integer)
     # uselist = false representa relação one-to-one
     endereco = db.relationship("Endereco", backref="usuario", uselist=False)
@@ -46,6 +47,10 @@ class Produto(db.Model):
     peso = db.Column(db.Integer)
     desabilitado = db.Column(db.String(1))
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+
+class Pedido(db.Model):
+    __tablename__ = "pedidos"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
 
 class Sabores(db.Model):

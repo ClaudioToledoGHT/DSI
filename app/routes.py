@@ -1,6 +1,7 @@
 from app.produtos import produto as produtos_blueprint
 from app.auth import auth as auth_blueprint
 from app.sabores import sabores as sabores_blueprint
+from app.fornecedores.pedidos import pedido as pedidos_blueprint
 
 # from app.api.api import api_bp
 # from app.auth.auth import auth_bp
@@ -24,5 +25,6 @@ def init_app(app):
     app.register_blueprint(produtos_blueprint)
     app.register_blueprint(auth_blueprint, url_prefix='')
     app.register_blueprint(sabores_blueprint)
+    app.register_blueprint(pedidos_blueprint)
 
 
