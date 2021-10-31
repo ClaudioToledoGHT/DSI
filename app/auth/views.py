@@ -36,7 +36,6 @@ def before_anything():
         if not esta_autenticado():
                 return redirect("/login")
 
-
 @auth.route('/cadastro', methods=["GET", "POST"])
 def cadastrar():
     if request.method == 'GET':

@@ -10,35 +10,72 @@
 {% endblock %}
 
 {% block content %}
-<h1>Sabores</h1>
-
-    {% for sabor in sabores %}
-        {% if sabor.desabilitado != 'S' %}
-            <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <a>{{ sabor.sabor }}</a>
-            </li>
-            </ul>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
-                    <a href='/sabores/desabilitar/{{sabor.id}}'>Desabilitar</a>
-                </li>
-                </ul>
-        {% else %}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <a><s>{{ sabor.sabor }}</s></a>
-                </li>
-                </ul>
-                <ul class="list-group list-group-flush">
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <h1>Sabores</h1>
+            {% for sabor in sabores %}
+                {% if sabor.desabilitado != 'S' %}
+                    <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
-                        <a href='/sabores/desabilitar/{{sabor.id}}'>Habilitar</a>
+                        <a>{{ sabor.sabor }}</a>
                     </li>
                     </ul>
-        {% endif %}
-    {% endfor %}
-
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
+                            <a href='/sabores/desabilitar/{{sabor.id}}'>Desabilitar</a>
+                        </li>
+                        </ul>
+                {% else %}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a><s>{{ sabor.sabor }}</s></a>
+                        </li>
+                        </ul>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <!--<a href='/sabores/editar/{{sabor.id}}'>Editar</a>-->
+                                <a href='/sabores/desabilitar/{{sabor.id}}'>Habilitar</a>
+                            </li>
+                            </ul>
+                {% endif %}
+            {% endfor %}
+        </div>
+    
+        <div>
+            <h1>Forma de entrega</h1>
+            <form action="/cadastro/vendedor/{{usuario_id}}" method="POST" id="form_principal" enctype="multipart/form-data">
+                <div class="input-field col s12">
+                    <p>Meio de transporte:</p>
+        
+                    <p>
+                        <label>
+                            <input name="transporte" type="radio" value="bicycle" />
+                            <span>Bicicleta</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="transporte" type="radio" value="pedestrian" />
+                            <span>Pedestre</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            <input name="transporte" type="radio" value="motorcycle" />
+                            <span>Moto</span>
+                        </label>
+                    <p>
+                    <p>
+                        <label>
+                            <input name="transporte" type="radio" value="car" />
+                            <span>Carro</span>
+                        </label>
+                    <p>
+                </div>
+                <button type="submit" class="waves-effect waves-light btn">Salvar</button>
+            </form>
+        </div>
+    </div>
     
 {% endblock %}

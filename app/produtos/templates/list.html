@@ -24,7 +24,7 @@
                 </ul>
                 {% endif %}
                 {% include 'sorvete.html' %}
-                <p class="sorvete-name">{{ produto.nome }}</p>
+                <a href="/produtos/detalhes/{{produto.id}}" class="sorvete-name">{{ produto.nome }}</a>
                 <p class="sorvete-description">{{ produto.descricao }}</p>
                 <p class="sorvete-price">R${{ produto.valorInicial }}<span class="sorvete-peso">({{ produto.peso }} gramas)</span></p>
             </li>

@@ -2,8 +2,11 @@ from app.daos.DAO import DAO
 from flask import flash, redirect, render_template, url_for, request
 from app.models import Produto
 from app.daos.ProdutoDAO import produto_dao
+from app.daos.UsuarioDAO import usuario_dao
+from app.daos.EnderecoDAO import endereco_dao
 from . import produto
 from app.auth.views import esta_autenticado
+from app.helper.location import geolocation
 
 @produto.route('/produtos')
 def listar_produtos():
@@ -35,9 +38,29 @@ def adicionar_produto():
 
     return render_template("form_produto.html", sabores=[], produto='novo', mensagem=msg)
 
-@produto.route("/produtos/details/<int:id>", methods=["GET", "POST"])
+@produto.route("/produtos/detalhes/<int:id>", methods=["GET", "POST"])
 def detalhes_produto(id):
-    print('detalhes')
+    produto = produto_dao.get_one(id)
+    usuario = esta_autenticado()
+    endereco_usuario = endereco_dao.get_address_by_user_id(usuario.id)
+    endereco_vendedor = endereco_dao.get_address_by_user_id(produto.usuario_id)
+    vendedor = usuario_dao.get_by_id(produto.usuario_id)
+
+    transporte = vendedor.forma_entrega
+    if not transporte:
+        transporte = 'motorcycle'
+
+    if produto:
+        produto.valorInicial = '{:.2f}'.format(produto.valorInicial)
+        produto.peso = '{:.1f}'.format(produto.peso)
+
+        distance = geolocation.calcular_distancia(endereco_usuario.latitude, endereco_usuario.longitude, endereco_vendedor.latitude, endereco_vendedor.longitude, transporte)
+        
+        if distance != False:
+            produto.tempoEntrega = distance["tempoEmMinutos"]
+            produto.distanciaEmKm = distance["distanciaEmKm"]
+
+    return render_template('detalhe_produto.html', produto=produto, tipoUsr = usuario.tipoUsuario)
 
 
 @produto.route("/produtos/editar/<int:id>", methods=["GET", "POST"])

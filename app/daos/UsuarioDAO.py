@@ -11,10 +11,23 @@ class UsuarioDAO(DAO):
             with self.session(bind=connection) as session:
                 return session.query(self.model).filter_by(email=email).first()
 
+    def get_by_id(self, id):
+        with self.engine.connect() as connection:
+            with self.session(bind=connection) as session:
+                return session.query(self.model).filter_by(id=id).first()
+
     def register(self, model):
         with self.engine.connect() as connection:
             with self.session(bind=connection) as session:
                 session.add(model)
+                session.commit()
+
+    def edit_transportation(self, model):
+        with self.engine.connect() as connection:
+            with self.session(bind=connection) as session:
+                session.execute("""UPDATE usuarios SET
+                                 FORMA_ENTREGA = '{}'
+                                WHERE id = {}""".format(model.forma_entrega, model.id))
                 session.commit()
 
 
