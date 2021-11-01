@@ -1,12 +1,17 @@
 from app.daos.DAO import DAO
-from flask import flash, redirect, render_template, url_for, request
-from app.models import Produto
+from flask import flash, redirect, render_template, url_for, request, jsonify
+from app.models import Produto, Pagamentos
 from app.daos.ProdutoDAO import produto_dao
 from app.daos.UsuarioDAO import usuario_dao
 from app.daos.EnderecoDAO import endereco_dao
+from app.daos.PagamentosDAO import pagamentos_dao
 from . import produto
 from app.auth.views import esta_autenticado
 from app.helper.location import geolocation
+from app.helper.payments import paypal
+
+
+
 
 @produto.route('/produtos')
 def listar_produtos():
@@ -104,3 +109,24 @@ def desabilitar_produto(id):
         msg = "{} Desabilitado.".format(produto.nome)
 
     return redirect(url_for("produtos.listar_produtos"))
+
+@produto.route("/paypal/payment", methods=["POST"])
+def paypal_payment():
+
+    id = request.form['produtoId']
+    nome = request.form['produtoNome']
+    preco = request.form['produtoPreco']
+
+    payment = paypal.createPayment(id,nome,preco)
+
+    return jsonify({'paymentID' : payment.id})
+
+@produto.route("/paypal/execute", methods=["POST"])
+def paypal_execute():
+
+    paymentID = request.form['paymentID']
+    payerID = request.form['payerID']
+
+    success = paypal.executePayment(paymentID,payerID)
+
+    return jsonify({'success' : success})

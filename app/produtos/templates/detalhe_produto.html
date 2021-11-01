@@ -13,13 +13,14 @@
   <div class="centered-container">
     <div class="produto-container">
       <div style="justify-self: left;">
-        <h2>{{produto.nome}}</h2>
+        <h2 id="nome">{{produto.nome}}</h2>
         {% include 'sorvete.html' %}
       </div>
       <div class="produto-anuncio">
         <div>
           <p class="sorvete-description sorvete-description-anuncio">{{produto.descricao}}</p>
           <p class="sorvete-peso">{{produto.peso}} gramas</p>
+          <p hidden id="id">{{produto.id}}</p>
 
           <br />
 
@@ -41,12 +42,53 @@
         {% if produto.distanciaEmKm != 0 and produto.tempoEntrega != 0 %}
           <div class="buy-container">
             <p>por apenas:</p>
-            <p class="sorvete-price">R${{produto.valorInicial}}</p>
+            <p class="sorvete-price" id="preco">R${{produto.valorInicial}}</p>
             <br />
-            <a class="waves-effect waves-light btn" href="#">Comprar</a>
+            <p>pagar com:</p>
+            <br />
+            <div id="paypal-button">
+            </div>
           </div>
         {% endif %}
         </div>
     </div>
   </div>
+
+  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+  <script>
+      var CREATE_PAYMENT_URL  = 'http://127.0.0.1:5000/paypal/payment';
+      var EXECUTE_PAYMENT_URL = 'http://127.0.0.1:5000/paypal/execute';
+  
+      paypal.Button.render({
+  
+          env: 'sandbox', // Or 'sandbox'
+  
+          commit: true, // Show a 'Pay Now' button
+  
+          payment: function() {
+              return paypal.request.post(CREATE_PAYMENT_URL, {
+                produtoId: document.getElementById('id').textContent,
+                produtoNome: document.getElementById('nome').textContent,
+                produtoPreco: document.getElementById('preco').textContent.split("R$")[1]
+              }).then(function(data) {
+                  return data.paymentID;
+              });
+          },
+  
+          onAuthorize: function(data) {
+              return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                  paymentID: data.paymentID,
+                  payerID:   data.payerID
+              }).then(function(res) {
+  
+                  console.log(res.success)
+                  // The payment is complete!
+                  // You can now show a confirmation message to the customer
+              });
+          }
+  
+      }, '#paypal-button');
+  </script>
+
 {% endblock %}
