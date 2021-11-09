@@ -9,13 +9,34 @@
 <li><a href="/logout">Sair</a></li>
 {% endblock %}
 
+
 {% block content %}
+  {% if sucessoPagamento %}
+    <br/>
+    <br/>
+    <div class="alert card green lighten-2" style="max-width: 45em;color: white;text-align: center;">
+        <div class="card-content">
+            <p>Compra realizada com sucesso! O {{produto.nome}} logo estará a caminho!</p>
+        </div>
+    </div>
+  {% endif %}
+
+  {% if canceladoPagamento %}
+    <br/>
+    <br/>
+    <div class="alert card red lighten-1 brown-text" style="max-width: 45em;color: white;text-align: center;">
+      <div class="card-content">
+        <p>Não foi possível completar realizar o pagamento do {{produto.nome}}</p>
+      </div>
+    </div>
+  {% endif %}
   <div class="centered-container">
     <div class="produto-container">
       <div style="justify-self: left;">
         <h2 id="nome">{{produto.nome}}</h2>
         {% include 'sorvete.html' %}
       </div>
+
       <div class="produto-anuncio">
         <div>
           <p class="sorvete-description sorvete-description-anuncio">{{produto.descricao}}</p>
@@ -72,7 +93,12 @@
                 produtoNome: document.getElementById('nome').textContent,
                 produtoPreco: document.getElementById('preco').textContent.split("R$")[1]
               }).then(function(data) {
-                  return data.paymentID;
+                if (data?.paymentID) {
+                  window.location.replace('http://127.0.0.1:5000/produtos/detalhes/2?pagamento=sucesso');
+                } else {
+                  window.location.replace('http://127.0.0.1:5000/produtos/detalhes/2?pagamento=cancelado');              
+                }
+                  // return data.paymentID;
               });
           },
   
@@ -81,7 +107,6 @@
                   paymentID: data.paymentID,
                   payerID:   data.payerID
               }).then(function(res) {
-  
                   console.log(res.success)
                   // The payment is complete!
                   // You can now show a confirmation message to the customer

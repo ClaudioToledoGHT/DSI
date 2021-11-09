@@ -44,6 +44,8 @@ def adicionar_produto():
     return render_template("form_produto.html", sabores=[], produto='novo', mensagem=msg)
 
 @produto.route("/produtos/detalhes/<int:id>", methods=["GET", "POST"])
+@produto.route("/produtos/detalhes/<int:id>?pagamento=sucesso", methods=["GET", "POST"])
+@produto.route("/produtos/detalhes/<int:id>?pagamento=cancelado", methods=["GET", "POST"])
 def detalhes_produto(id):
     produto = produto_dao.get_one(id)
     usuario = esta_autenticado()
@@ -65,7 +67,10 @@ def detalhes_produto(id):
             produto.tempoEntrega = distance["tempoEmMinutos"]
             produto.distanciaEmKm = distance["distanciaEmKm"]
 
-    return render_template('detalhe_produto.html', produto=produto, tipoUsr = usuario.tipoUsuario)
+    sucessoPgto = str(request.query_string).find('pagamento=sucesso') != -1
+    errorPgto = str(request.query_string).find('pagamento=cancelado') != -1
+
+    return render_template('detalhe_produto.html', produto=produto, tipoUsr = usuario.tipoUsuario, sucessoPagamento = sucessoPgto, canceladoPagamento = errorPgto)
 
 
 @produto.route("/produtos/editar/<int:id>", methods=["GET", "POST"])
@@ -117,9 +122,13 @@ def paypal_payment():
     nome = request.form['produtoNome']
     preco = request.form['produtoPreco']
 
-    payment = paypal.createPayment(id,nome,preco)
+    usuario = esta_autenticado()
 
+    payment = paypal.createPayment(id,nome,preco, usuario.id)
+    # return jsonify({'statusPagamento' : payment})
     return jsonify({'paymentID' : payment.id})
+    # return redirect(url_for('produtos.detalhes_produto', id = id, pagamento= 'sucesso' if payment == True else 'cancelado'))
+
 
 @produto.route("/paypal/execute", methods=["POST"])
 def paypal_execute():
