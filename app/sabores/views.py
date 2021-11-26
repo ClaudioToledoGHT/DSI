@@ -2,6 +2,7 @@ from app.daos.DAO import DAO
 from flask import flash, redirect, render_template, url_for, request
 from app.models import Sabores
 from app.daos.SaboresDAO import sabores_dao
+from app.daos.UsuarioDAO import usuario_dao
 from . import sabores
 from app.auth.views import esta_autenticado
 
@@ -9,9 +10,8 @@ from app.auth.views import esta_autenticado
 def listar_sabores():
     esta_autenticado()
     sabores = sabores_dao.get_all()
-    print('sabores')
-    print(sabores)
-    return render_template('listSabores.html', sabores=sabores, tipoUsr = esta_autenticado().tipoUsuario)
+    usuario = esta_autenticado()
+    return render_template('listSabores.html', sabores=sabores, tipoUsr = usuario.tipoUsuario, usuario_id=usuario.id)
 
 @sabores.route("/sabores/cadastrar", methods=["GET", "POST"])
 def adicionar_sabor():
@@ -26,6 +26,13 @@ def adicionar_sabor():
         msg = 'Item cadastrado com sucesso!'
 
     return render_template("add_sabor.html", sabores=[], sabor='novo', mensagem=msg)
+
+@sabores.route('/cadastro/vendedor/<int:id>', methods=["GET", "POST"])
+def editar_transporte(id):
+    vendedor = usuario_dao.get_by_id(id)
+    vendedor.forma_entrega = request.form["transporte"]
+    usuario_dao.edit_transportation(vendedor)
+    return redirect(url_for("sabores.listar_sabores"))
 
 @sabores.route("/sabores/details/<int:id>", methods=["GET", "POST"])
 def detalhes_sabor(id):

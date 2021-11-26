@@ -38,6 +38,10 @@ p {
   flex-wrap: wrap;
 }
 
+.flex {
+  display: flex;
+}
+
 .text-align-lst {
   text-align-last: justify;
 }
@@ -299,4 +303,58 @@ p {
 
 .google-btn {
   background-color: #4285f4;
+}
+
+/* detalhe produtos */
+.produto-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10vh;
+  min-height: 50vh;
+  align-content: center;
+}
+
+.produto-container h2 {
+  padding-left: 25px;
+  padding-top: 0;
+  margin-top: 15px;
+  font-size: 2.5em;
+}
+
+.produto-anuncio {
+  justify-self: left;
+  padding: 20px 30px;
+  -webkit-box-shadow: 4px 10px 16px 4px #26a69a;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.produto-container .sorvete-price {
+  font-size: 1.2em;
+}
+
+.produto-container .sorvete-peso {
+  margin-left: 0px;
+}
+
+.produto-container .sorvete-price {
+  font-size: 1.5em;
+  color: #eb2262;
+  font-weight: bold;
+}
+
+.buy-container {
+  text-align: -webkit-right;
+  width: 30vw;
+}
+
+.sorvete-description-anuncio {
+  font-size: 1.5em;
+  font-weight: 400;
+}
+
+.entrega-tempo {
+  font-size: 1.2em;
 }

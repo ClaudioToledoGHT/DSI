@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Cadastrar ?{% endblock %}
+{% block js %}
+
+{% endblock %}
+
+{% block entrarsair %}
+<li><a href="javascript:void(0)" onClick="history.go(-1); return false;">Voltar</a></li>
+<li><a href="/logout">Sair</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="centered-container">
+    <div class="produto-container">
+      <div style="justify-self: left;">
+        <h2>{{produto.nome}}</h2>
+        {% include 'sorvete.html' %}
+      </div>
+      <div class="produto-anuncio">
+        <div>
+          <p class="sorvete-description sorvete-description-anuncio">{{produto.descricao}}</p>
+          <p class="sorvete-peso">{{produto.peso}} gramas</p>
+
+          <br />
+
+          <!-- {% if produto.distanciaEmKm != 0 and produto.tempoEntrega != 0 %} -->
+          <div class="flex">
+            <i class="material-icons">timer</i>	&nbsp;
+            <p class="entrega-tempo">Seu sorvete está <b>{{produto.distanciaEmKm}} Km longe de você e chegará em {{produto.tempoEntrega}}</b></p>
+          </div>
+          <!-- {% endif %} -->
+
+          <!-- {% if produto.distanciaEmKm == 0 or produto.tempoEntrega == 0 %} -->
+          <div class="flex">
+            <p class="entrega-tempo">Localidade indisponível</p>
+          </div>
+          <!-- {% endif %} -->
+        </div>
+
+
+        {% if produto.distanciaEmKm != 0 and produto.tempoEntrega != 0 %}
+          <div class="buy-container">
+            <p>por apenas:</p>
+            <p class="sorvete-price">R${{produto.valorInicial}}</p>
+            <br />
+            <a class="waves-effect waves-light btn" href="#">Comprar</a>
+          </div>
+        {% endif %}
+        </div>
+    </div>
+  </div>
+{% endblock %}

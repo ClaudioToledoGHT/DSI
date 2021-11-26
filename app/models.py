@@ -17,6 +17,7 @@ class Usuario(db.Model):
     senha = db.Column(db.String(255))
     telefone = db.Column(db.String(20))
     tipoUsuario = db.Column(db.Integer)
+    forma_entrega = db.Column(db.String(30))
     # uselist = false representa relação one-to-one
     endereco = db.relationship("Endereco", backref="usuario", uselist=False)
     _id = db.relationship('Produto', backref='usuario', lazy=True)
