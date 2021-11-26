@@ -45,3 +45,13 @@ ALTER TABLE usuarios ALTER COLUMN SENHA VARCHAR(255) NULL
 
 ALTER TABLE usuarios
 ADD TELEFONE VARCHAR(15)
+ALTER TABLE usuarios ADD FORMA_ENTREGA VARCHAR(30)
+
+CREATE TABLE pagamentos (
+	id int primary key identity(1,1) not null,
+	paymentID varchar(100) not null,
+	paymentCreate datetime,
+	paymentUpdate datetime,
+	status varchar not null,
+	id_usuario int
+)

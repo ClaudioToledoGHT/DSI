@@ -61,3 +61,11 @@ class Sabores(db.Model):
     desabilitado = db.Column(db.String(1))
 
     #embalagem
+class Pagamentos(db.Model):
+    __tablename__ = "pagamentos"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    paymentID = db.Column(db.String(100), nullable=False)
+    paymentCreate = db.Column(db.DateTime)
+    paymentUpdate = db.Column(db.DateTime)
+    status = db.Column(db.String(30), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))

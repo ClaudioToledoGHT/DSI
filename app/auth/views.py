@@ -30,8 +30,6 @@ def caminhoPrincipal():
 # Valida se o usuário está autenticado antes de toda requisição
 @auth.before_app_request
 def before_anything():
-    print('path')
-    print(str(request.url_rule))
     if str(request.url_rule) != '/login' and str(request.url_rule) != '/logout' and str(request.url_rule) != '/callback' and str(request.url_rule) != '/cadastro' and str(request.url_rule) != '/google/login' and str(request.url_rule) != '/':
         if not esta_autenticado():
                 return redirect("/login")
@@ -97,8 +95,6 @@ def cadastrar():
         geolocator = Nominatim(user_agent="DSI_GHT_2021")
         location = geolocator.geocode(endereco.logradouro + ", " + endereco.numero + ", " + endereco.cidade + " - " + endereco.bairro)
 
-        print('location')
-        print(location)
         latitude = 0
         longitude = 0
         if location:
@@ -162,8 +158,6 @@ def logout():
 
 @auth.errorhandler(404)
 def not_found(e):
-    print('404')
-    print(e)
     return render_template('404.html')
 
 
@@ -238,8 +232,6 @@ def esta_autenticado():
 
     tipo_auth = request.cookies.get("provedor", "")
     if not email:
-        print('not email')
-
         if session:
             if 'email' in session:
                 email = session["email"]
@@ -264,6 +256,4 @@ def validar_autenticacao(email, senha, tipo_de_autenticacao):
         #     return False
     elif not check_password_hash(usuario.senha, senha):
         return False
-    print('está autenticado')
-    print(usuario.email)
     return usuario
