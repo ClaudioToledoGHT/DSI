@@ -1,5 +1,6 @@
 from app.models import Pagamentos
 from app.daos.DAO import DAO
+from sqlalchemy import extract  
 
 class PagamentosDAO(DAO):
     def __init__(self, model):
@@ -29,6 +30,10 @@ class PagamentosDAO(DAO):
                                  paymentUpdate = '{}',
                                  STATUS = '{}'
                                 WHERE paymentID = '{}'""".format(model.paymentUpdate,model.status, model.paymentID))
-                session.commit()
+
+    def get_by_month_and_year(self, month, year):
+        with self.engine.connect() as connection:
+            with self.session(bind=connection) as session:
+                return session.query(Pagamentos).filter(extract('year', Pagamentos.paymentCreate)==year).filter(extract('month', Pagamentos.paymentCreate)==month).all()
 
 pagamentos_dao = PagamentosDAO(Pagamentos)

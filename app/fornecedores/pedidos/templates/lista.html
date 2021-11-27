@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+<h2>Vendas do mês</h2>
+<div>
+  <img class="button-center" src="https://image-charts.com/chart?chbr=8&chd={{vendas}}&chf=b0,lg,90,05B142,1,0CE858,0.2&chma=0,0,10,10&chs=700x300&cht=bvs&chxl=0:|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31&chxt=x,y" />
+</div>
+
 <h2>Pedidos</h2>
 
 {% with mensagem = get_flashed_messages() %}

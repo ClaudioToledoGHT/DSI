@@ -55,3 +55,5 @@ CREATE TABLE pagamentos (
 	status varchar not null,
 	id_usuario int
 )
+
+ALTER TABLE pagamentos ADD id_vendedor INTEGER;

@@ -4,15 +4,25 @@ from flask import render_template, url_for, make_response, flash
 from app.models import Produto
 from app.daos.PedidoDAO import pedido_dao
 from app.daos.UsuarioDAO import usuario_dao
+from app.daos.PagamentosDAO import pagamentos_dao
 from app.helper.messageSender import notification_sender
 from . import pedido
 from app.auth.views import esta_autenticado
+import datetime
 
 @pedido.route('/pedidos')
 def listar_pedidos():
     usuario = esta_autenticado()
     pedidos = get_pedidos(usuario.id)
-    return render_template('lista.html', pedidos=pedidos, tipoUsr = usuario.tipoUsuario)
+    itens = pagamentos_dao.get_by_month_and_year(datetime.datetime.today().month, datetime.datetime.today().year)
+    
+    parametros='t:'
+    for x in range(31):
+      parametros += ''
+      filtro = filter(lambda pagamento: pagamento.paymentCreate.strftime("%d") == str(x), itens)
+      parametros += (str(len(list(filtro))) +  ',')
+
+    return render_template('lista.html', pedidos=pedidos, tipoUsr = usuario.tipoUsuario, vendas=parametros)
 
 @pedido.route('/entregar/pedido/<int:id>', methods=["POST"])
 def iniciar_entrega(id):
