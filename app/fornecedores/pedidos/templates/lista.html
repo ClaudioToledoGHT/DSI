@@ -5,9 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<h2>Vendas do mês</h2>
+  {% if houveVendas %}
+  <h2>Vendas do mês</h2> 
+    <img class="button-center" src="https://image-charts.com/chart?chbr=8&chd={{vendas}}&chf=b0,lg,90,05B142,1,0CE858,0.2&chma=0,0,10,10&chs=700x300&cht=bvs&chxl=0:|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31&chxt=x,y" />
+  {% endif %}
+
 <div>
-  <img class="button-center" src="https://image-charts.com/chart?chbr=8&chd={{vendas}}&chf=b0,lg,90,05B142,1,0CE858,0.2&chma=0,0,10,10&chs=700x300&cht=bvs&chxl=0:|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31&chxt=x,y" />
 </div>
 
 <h2>Pedidos</h2>
@@ -22,6 +25,10 @@
   {% endif %}
 {% endwith %}
 
+{% if pedidos|length == 0 %}
+    <p style="font-size: 1.5em;">Nenhum pedido criado</p>
+{% endif %}
+
 <ul class=" d-flex">
   {% for pedido in pedidos %}
     <div class="col s12 m7" style="margin-right: 20px">
@@ -33,7 +40,7 @@
             <p><b>Produto: </b>{{ pedido.produto }}</p>
           </div>
           <form action="/entregar/pedido/{{pedido.cliente_id}}" method="POST" class="card-action">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Iniciar entrega
+            <button class="btn waves-effect waves-light" type="submit" name="action">Enviar confirmação
             </button>
           </form>
         </div>

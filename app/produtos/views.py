@@ -30,16 +30,17 @@ def listar_produtos():
 def adicionar_produto():
     msg = ''
     if request.method == 'POST':
+        usuario = esta_autenticado()
         produto = Produto()
         produto.nome = request.form['nome']
         produto.descricao = request.form['descricao']
         produto.valorInicial = request.form['valorInicial']
         produto.peso = request.form['peso']
         produto.desabilitado = 'S'
-        produto.usuario_id = 1 # ajustar
+        produto.usuario_id = usuario.id
 
         produto_dao.register(produto)
-        msg = 'Item cadastrado com sucesso!'
+        msg = 'Produto cadastrado com sucesso!'
 
     return render_template("form_produto.html", sabores=[], produto='novo', mensagem=msg)
 
@@ -121,10 +122,11 @@ def paypal_payment():
     id = request.form['produtoId']
     nome = request.form['produtoNome']
     preco = request.form['produtoPreco']
+    id_vendedor = request.form['vendedorId']
 
     usuario = esta_autenticado()
 
-    payment = paypal.createPayment(id,nome,preco, usuario.id)
+    payment = paypal.createPayment(id,nome,preco, usuario.id, id_vendedor)
     # return jsonify({'statusPagamento' : payment})
     return jsonify({'paymentID' : payment.id})
     # return redirect(url_for('produtos.detalhes_produto', id = id, pagamento= 'sucesso' if payment == True else 'cancelado'))

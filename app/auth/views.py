@@ -39,10 +39,19 @@ def cadastrar():
     try:
         if request.method == 'GET':
             usuario_obj = {}
-            nome = request.args.get('nome')
-            email = request.args.get('email')
-            provedor_id = request.args.get('provedor_id')
-            provedor = request.args.get('provedor')
+            email = ''
+            nome = ''
+            provedor_id = ''
+            provedor = ''
+
+            if request.args.get('nome') is not None:
+                nome = request.args.get('nome')
+
+            if request.args.get('email') is not None:
+                email = request.args.get('email')
+                provedor_id = request.args.get('provedor_id')
+                provedor = request.args.get('provedor')
+
 
             if not nome and not email and session:
                 if 'email' in session:
@@ -64,19 +73,15 @@ def cadastrar():
             return render_template('form_cadastro.html', usuario=usuario_obj)
 
         if request.method == 'POST':
-            print('POST')
             provedor = request.form['provedor']
             provedor_id = request.form['provedor_id']
             senha = None
-
-
 
             if provedor == '':
                 provedor = None
 
             if provedor_id == '':
                 provedor_id = None
-            else:
                 senha = generate_password_hash(request.form['senha'])
 
             usuario = Usuario()

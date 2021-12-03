@@ -165,9 +165,9 @@
 
         $(document).ready(function() {
             let email = new URL(location.href).searchParams.get('email')
-            if(email) {
+            console.log('email', email)
+            if(email !== null) {
                 $("#email").val(email)
-                $("#nome").val(new URL(location.href).searchParams.get('nome'))
                 $("#nome").val(new URL(location.href).searchParams.get('nome'))
             }
             function limpa_formulário_cep() {

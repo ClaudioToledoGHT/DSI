@@ -22,7 +22,7 @@ def listar_pedidos():
       filtro = filter(lambda pagamento: pagamento.paymentCreate.strftime("%d") == str(x), itens)
       parametros += (str(len(list(filtro))) +  ',')
 
-    return render_template('lista.html', pedidos=pedidos, tipoUsr = usuario.tipoUsuario, vendas=parametros)
+    return render_template('lista.html', pedidos=pedidos, tipoUsr = usuario.tipoUsuario, vendas=parametros, houveVendas=len(list(filtro)) > 0)
 
 @pedido.route('/entregar/pedido/<int:id>', methods=["POST"])
 def iniciar_entrega(id):
@@ -47,16 +47,18 @@ def iniciar_entrega(id):
     return redirect("/pedidos")
 
 def get_pedidos(fornecedorId):
-  usuarios = usuario_dao.get_clientes(fornecedorId)
+  print('fornecedorId', fornecedorId)
+  resultado = pagamentos_dao.get_payments_by_sale(fornecedorId)
 
   pedidos = []
-  for usuario in usuarios:
+  for p in resultado:
+      cliente = usuario_dao.get_usuario_by_id(p.id_usuario)
       pedido = {}
-      pedido['nome'] = usuario.nome
-      pedido['cliente_id'] = usuario.id
-      pedido['data'] = '01/10/2021'
-      pedido['valor'] = 45.50
-      pedido['produto'] = 'Sorvete de flocos'
+      pedido['nome'] = cliente.nome
+      pedido['cliente_id'] = cliente.id
+      pedido['data'] = p.paymentCreate
+      pedido['valor'] = p.id
+      pedido['produto'] = p.id
       pedidos.append(pedido)
   
   return pedidos

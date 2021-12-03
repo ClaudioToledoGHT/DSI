@@ -13,7 +13,11 @@
     <h3 class="center-align">Cadastro de Sorvete</h3>
 
     {% if mensagem %}
-        <p class="mensagem">{{mensagem}}</p>
+    <div class="alert card amber lighten-4 brown-text">
+        <div class="card-content">
+            {{mensagem}}
+        </div>
+    </div>
     {% endif %}
 
     <!-- /{{ produto['id_produto'] }} -->

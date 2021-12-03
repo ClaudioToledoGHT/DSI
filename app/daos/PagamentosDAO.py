@@ -36,4 +36,9 @@ class PagamentosDAO(DAO):
             with self.session(bind=connection) as session:
                 return session.query(Pagamentos).filter(extract('year', Pagamentos.paymentCreate)==year).filter(extract('month', Pagamentos.paymentCreate)==month).all()
 
+    def get_payments_by_sale(self, id_vendedor):
+        with self.engine.connect() as connection:
+            with self.session(bind=connection) as session:
+                return session.query(Pagamentos).filter_by(id_vendedor=id_vendedor).all()
+
 pagamentos_dao = PagamentosDAO(Pagamentos)

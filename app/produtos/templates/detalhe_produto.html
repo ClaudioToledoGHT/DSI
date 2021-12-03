@@ -33,6 +33,7 @@
   <div class="centered-container">
     <div class="produto-container">
       <div style="justify-self: left;">
+        <p style="display: none;" id="vendedor_id">{{ produto.usuario_id }}</p>
         <h2 id="nome">{{produto.nome}}</h2>
         {% include 'sorvete.html' %}
       </div>
@@ -91,7 +92,8 @@
               return paypal.request.post(CREATE_PAYMENT_URL, {
                 produtoId: document.getElementById('id').textContent,
                 produtoNome: document.getElementById('nome').textContent,
-                produtoPreco: document.getElementById('preco').textContent.split("R$")[1]
+                produtoPreco: document.getElementById('preco').textContent.split("R$")[1],
+                vendedorId: document.getElementById('vendedor_id').textContent
               }).then(function(data) {
                 if (data?.paymentID) {
                   window.location.replace('http://127.0.0.1:5000/produtos/detalhes/2?pagamento=sucesso');

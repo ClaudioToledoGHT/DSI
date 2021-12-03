@@ -11,7 +11,7 @@ paypalrestsdk.configure({
 
 class Paypal():
 
-    def createPayment(self,id,nome,preco, usuarioId):
+    def createPayment(self,id,nome,preco, usuarioId, vendedorId):
 
         payment = paypalrestsdk.Payment({
             "intent": "sale",
@@ -40,6 +40,7 @@ class Paypal():
             pagamento.paymentUpdate = payment.update_time
             pagamento.status = payment.state
             pagamento.id_usuario = usuarioId
+            pagamento.id_vendedor = vendedorId
             pagamentos_dao.register(pagamento)
             print('Payment created')
         else:

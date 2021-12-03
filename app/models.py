@@ -69,3 +69,4 @@ class Pagamentos(db.Model):
     paymentUpdate = db.Column(db.DateTime)
     status = db.Column(db.String(30), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    id_vendedor = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
