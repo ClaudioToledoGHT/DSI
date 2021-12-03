@@ -1,66 +1,99 @@
 {% extends "base.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'base.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}"/>
 
 {% block titulo %}Cadastrar ?{% endblock %}
-{% block js %}
+{% block styles %}
+.container {
+    height: calc(100vh - 64px);
+    margin: 0;
+    min-width: 100vw;
+    width: 100vw;
+    background: rgb(38,166,154);
+    background: linear-gradient(0deg, rgba(38,166,154,1) 0%, rgba(238,110,115,1) 81%);
+}
 
+.login-background {
+    padding-top: 10vh;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.login-card {
+    background: white;
+    padding: 0 30px;
+    border-radius: 10px;
+}
+
+.entrar-p {
+    font-size: 2em;
+    text-align: center;
+    padding-top: 25px;
+}
+
+.buttons-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    padding-bottom: 35px;
+}
 {% endblock %}
 
 {% block entrarsair %}
-<li><a href="/cadastro" class="waves-effect waves-light btn">cadastrar</a></li>
-<li><a href="/login">Entrar</a></li>
+<li><a href="/cadastro" class="waves-effect waves-light btn">criar conta</a></li>
 {% endblock %}
 
 {% block content %}
 
-    {% if erro or mensagem %}
-    <br/>
-    <br/>
-    <div class="alert card amber lighten-4 brown-text">
-        <div class="card-content">
-            <!-- <i class="material-icons">report_problem</i> -->
-            <p>{{erro}}</p>
-            <p>{{mensagem}}</p>
+    <div class="login-background">
+        {% if erro or mensagem %}
+            <br/>
+            <br/>
+            <div class="alert card amber lighten-4 brown-text">
+                <div class="card-content">
+                    <!-- <i class="material-icons">report_problem</i> -->
+                    <p>{{erro}}</p>
+                    <p>{{mensagem}}</p>
+                </div>
+            </div>
+        {% endif %}
+        <div class="login-card">
+
+            <b><p class="entrar-p">Login</p></b>
+            {% include 'sorvete.html' %}
+
+            <form action="./google/login" method="POST" class="">
+                <button type="submit" class="google-btn" style="background-color: #4285f4;color: white;display: flex;border: none;margin: 0 auto;padding: 0;height: 45px;align-items: center;">
+                    <div class="google-btn-logo" style="background-color: white;height: 45px;text-align: -webkit-center;margin: 0 auto;">
+                        <img src="https://avatars.githubusercontent.com/in/40688?v=4" width="35" height="35" style="margin-top: 5px;margin-right: 10px;">
+                    </div>
+                    <div class="waves-effect" style="width: 35vw;">
+                        <p style="padding-left: 15px;padding-right: 15px; font-weight: bold;">entrar com google</p>
+                    </div>
+                </button>
+            </form>
+            <br/>
+            <form action="./login" method="POST" class="login-container" style="width: 40vw;text-align: -webkit-center;margin: 0 auto;">
+                
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input name="email" id="email" type="text" class="validate">
+                    <label for="email">E-mail</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                    <input name="senha" id="senha" type="password" class="validate">
+                    <label for="senha">Senha</label>
+                    </div>
+                </div>
+
+                <div class="buttons-container">
+                    <a href="/cadastro" class="waves-effect waves-light btn">cadastrar</a>
+                    <button type="submit" class="waves-effect waves-light btn" style="background-color: #ee6e73;">entrar</button>
+                </div>
+            </form>
         </div>
     </div>
-    {% endif %}
-
-    <br/>
-    <h3 style="text-align: center;">Login</h3>
-    <br/>
-    <br/>
-
-
-    <form action="./google/login" method="POST" class="">
-        <button type="submit" class="google-btn" style="background-color: #4285f4;color: white;display: flex;border: none;margin: 0 auto;padding: 0;height: 45px;align-items: center;">
-            <div class="google-btn-logo" style="background-color: white;height: 45px;text-align: -webkit-center;margin: 0 auto;">
-                <img src="https://avatars.githubusercontent.com/in/40688?v=4" width="35" height="35" style="margin-top: 5px;margin-right: 10px;">
-            </div>
-            <div class="waves-effect" style="width: 35vw;">
-                <p style="padding-left: 15px;padding-right: 15px; font-weight: bold;">entrar com google</p>
-            </div>
-        </button>
-    </form>
-
-    <br/>
-    <br/>
-    <br/>
-
-    <form action="./login" method="POST" class="login-container" style="width: 40vw;text-align: -webkit-center;margin: 0 auto;">
-        
-        <div class="row">
-            <div class="input-field col s12">
-            <input name="email" id="email" type="text" class="validate">
-            <label for="email">E-mail</label>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="input-field col s12">
-            <input name="senha" id="senha" type="password" class="validate">
-            <label for="senha">Senha</label>
-            </div>
-        </div>
-
-        <button type="submit" class="waves-effect waves-light btn" style="width: 20vw; background-color: #ee6e73;">entrar</button>
-    </form>
 {% endblock %}

@@ -15,7 +15,7 @@ class Usuario(db.Model):
     provedor = db.Column(db.String(10))
     email = db.Column(db.String(50))
     senha = db.Column(db.String(255))
-    telefone = db.Column(db.String(20))
+    telefone = db.Column(db.String(15))
     tipoUsuario = db.Column(db.Integer)
     forma_entrega = db.Column(db.String(30))
     # uselist = false representa relação one-to-one

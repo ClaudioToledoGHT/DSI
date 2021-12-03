@@ -28,6 +28,15 @@ p {
     margin-top: 20vh;
 }
 
+.login-background {
+  height: calc(100vh - 63px);
+  margin: 0;
+  min-width: 100vw;
+  width: 100vw;
+  background: rgb(38,166,154);
+  background: linear-gradient(0deg, rgba(38,166,154,1) 0%, rgba(238,110,115,1) 81%);
+}
+
 .button-center {
     text-align: center;
     width: 100%;

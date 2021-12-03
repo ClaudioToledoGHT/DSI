@@ -11,10 +11,9 @@ import google.auth.transport.requests
 import os
 import requests
 import pathlib
-import time
+from app.helper.location import geolocation
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-GOOGLE_CLIENT_ID = "933766707378-urgg0ad2k7s0e6p0s0kji327j8vae7sn.apps.googleusercontent.com"
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
@@ -36,81 +35,98 @@ def before_anything():
 
 @auth.route('/cadastro', methods=["GET", "POST"])
 def cadastrar():
-    if request.method == 'GET':
-        usuario_obj = {}
-        nome = request.cookies.get("nome", "")
-        email = request.cookies.get("email", "")
-        provedor_id = request.cookies.get("provedor_id", "")
-        provedor = request.cookies.get("provedor", "")
 
-        if not nome and not email and session:
-            if 'email' in session:
-                email = session["email"]
-            if 'nome' in session:
-                nome = session["nome"]
-            if 'provedor' in session:
-                provedor = session["provedor"]
-            if 'provedor_id' in session:
-                provedor_id = session["provedor_id"]
-            usuario_obj['senha'] = ''
+    try:
+        if request.method == 'GET':
+            usuario_obj = {}
+            nome = request.args.get('nome')
+            email = request.args.get('email')
+            provedor_id = request.args.get('provedor_id')
+            provedor = request.args.get('provedor')
 
-        usuario_obj['email'] = email
-        usuario_obj['nome'] = nome
-        usuario_obj['provedor_id'] = provedor_id
-        usuario_obj['provedor'] = provedor
-        usuario_obj['cadastro'] = True
+            if not nome and not email and session:
+                if 'email' in session:
+                    email = session["email"]
+                if 'nome' in session:
+                    nome = session["nome"]
+                if 'provedor' in session:
+                    provedor = session["provedor"]
+                if 'provedor_id' in session:
+                    provedor_id = session["provedor_id"]
+                usuario_obj['senha'] = ''
 
-        return render_template('form_cadastro.html', usuario=usuario_obj)
+            usuario_obj['email'] = email
+            usuario_obj['nome'] = nome
+            usuario_obj['provedor_id'] = provedor_id
+            usuario_obj['provedor'] = provedor
+            usuario_obj['cadastro'] = True
 
-    if request.method == 'POST':
-        provedor = request.form['provedor']
-        provedor_id = request.form['provedor_id']
-        senha = None
+            return render_template('form_cadastro.html', usuario=usuario_obj)
 
-        if provedor == '':
-            provedor = None
+        if request.method == 'POST':
+            print('POST')
+            provedor = request.form['provedor']
+            provedor_id = request.form['provedor_id']
+            senha = None
 
-        if provedor_id == '':
-            provedor_id = None
-        else:
-            senha = generate_password_hash(request.form['senha'])
 
-        usuario = Usuario()
-        usuario.nome = request.form['nome']
-        usuario.email = request.form['email']
-        usuario.provedor = provedor
-        usuario.provedor_id = provedor_id
-        usuario.senha = senha
-        usuario.tipoUsuario = request.form['tipoUsuario']
 
-        endereco = Endereco()
-        endereco.logradouro = request.form['logradouro']
-        endereco.cidade = request.form['cidade']
-        endereco.cep = request.form['cep']
-        endereco.uf = request.form['uf']
-        endereco.bairro = request.form['bairro']
-        endereco.numero = request.form['numero']
-        endereco.complemento = request.form['complemento']
-        endereco.pontoDeReferencia = request.form['pontoDeReferencia']
-        geolocator = Nominatim(user_agent="DSI_GHT_2021")
-        location = geolocator.geocode(endereco.logradouro + ", " + endereco.numero + ", " + endereco.cidade + " - " + endereco.bairro)
+            if provedor == '':
+                provedor = None
 
-        latitude = 0
-        longitude = 0
-        if location:
-            latitude = location.latitude
-            longitude = location.latitude
+            if provedor_id == '':
+                provedor_id = None
+            else:
+                senha = generate_password_hash(request.form['senha'])
+
+            usuario = Usuario()
+            usuario.nome = request.form['nome']
+            usuario.email = request.form['email']
+            usuario.provedor = provedor
+            usuario.provedor_id = provedor_id
+            usuario.senha = senha
+            usuario.tipoUsuario = request.form['tipoUsuario']
+
+            endereco = Endereco()
+            endereco.logradouro = request.form['logradouro']
+            endereco.cidade = request.form['cidade']
+            endereco.cep = request.form['cep']
+            endereco.uf = request.form['uf']
+            endereco.bairro = request.form['bairro']
+            endereco.numero = request.form['numero']
+            endereco.complemento = request.form['complemento']
+            endereco.pontoDeReferencia = request.form['pontoDeReferencia']
             
-        endereco.longitude = longitude
-        endereco.latitude = latitude
-        usuario.endereco = endereco
+            # geolocator = Nominatim(user_agent="DSI_GHT_2021")
+            # location = geolocator.geocode(endereco.logradouro + ", " + endereco.numero + ", " + endereco.cidade + " - " + endereco.bairro)
+            # latitude = 0
+            # longitude = 0
+            # if location:
+            #     latitude = location.latitude
+            #     longitude = location.latitude
+            # endereco.longitude = longitude
+            # endereco.latitude = latitude
 
-        usuario_dao.register(usuario)
+            coordenadas = geolocation.getCoordenadasPorCep(endereco.cep)
+
+            if coordenadas and coordenadas["latitude"]:
+                endereco.latitude = coordenadas["latitude"]
+                endereco.longitude = coordenadas["longitude"]
+            else:
+                endereco.latitude = 0
+                endereco.longitude = 0
+            usuario.endereco = endereco
+
+            usuario_dao.register(usuario)
+            return redirect("/login")
+    except Exception as e:
+        print(e)
         return redirect("/login")
 
 @auth.route("/")
 @auth.route('/login', methods=["GET", "POST"])
 def autenticar():
+        print('login')
         if request.method == 'POST':
             email = request.form['email']
             senha = request.form['senha']
@@ -178,6 +194,7 @@ def autenticar_google():
 @auth.route("/callback")
 def google_auth_callback():
     try:
+        GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
         flow.fetch_token(authorization_response=request.url)
 
         if not session["state"] == request.args["state"]:
@@ -202,7 +219,7 @@ def google_auth_callback():
         usuario = validar_autenticacao(email, '', GOOGLE_PROVIDER)
 
         if not usuario:
-            resposta = redirect('/cadastro')
+            resposta = redirect('/cadastro?email='+email +'&nome='+nome+'&provedor_id='+id_info.get("sub")+"&provedor="+GOOGLE_PROVIDER)
             resposta.set_cookie("nome", nome, samesite = "Strict")
             resposta.set_cookie("email", email, samesite = "Strict")
 
@@ -250,10 +267,7 @@ def validar_autenticacao(email, senha, tipo_de_autenticacao):
     if not usuario:
         return False
     
-    if tipo_de_autenticacao == GOOGLE_PROVIDER:
-        print('auth google')
-        # if usuario.provedor_id != senha:
-        #     return False
-    elif not check_password_hash(usuario.senha, senha):
-        return False
+    if not tipo_de_autenticacao == GOOGLE_PROVIDER:
+        if not check_password_hash(usuario.senha, senha):
+            return False
     return usuario
